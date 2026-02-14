@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ride_now
 
 A new Flutter project.
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# Ride_now
+>>>>>>> e5427abe9c07d3317bef6490a61281985f902165
