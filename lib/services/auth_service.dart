@@ -41,13 +41,20 @@ class AuthService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
 
-        // Check and save token if present (Auto-Login)
+        // Save token and user details if present
         if (data.containsKey('access_token')) {
-          final String accessToken = data['access_token'];
-          await LocalStorageService.saveToken(accessToken);
-          // Optional: Save user ID if needed
-          // Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
-          // await LocalStorageService.saveUserId(decodedToken['sub']);
+          await LocalStorageService.saveToken(data['access_token']);
+        }
+        if (data.containsKey('id')) {
+          await LocalStorageService.saveUserId(data['id']);
+        }
+        if (data.containsKey('user')) {
+          final user = data['user'];
+          await LocalStorageService.saveUserData(
+            email: user['email'] ?? '',
+            firstName: user['first_name'] ?? '',
+            lastName: user['last_name'] ?? '',
+          );
         }
         return ApiResponse.completed(data);
       } else {
@@ -78,24 +85,38 @@ class AuthService {
       print("Login Response Code: ${response.statusCode}");
       print("Login Response Body: ${response.body}");
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final String accessToken = data['access_token'];
+      final data = jsonDecode(response.body);
 
-        // Decode token to get user ID
-        //  Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
-        //String userId = decodedToken['sub'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (data['status'] == true) {
+          // Save token and user details if present
+          if (data.containsKey('access_token')) {
+            await LocalStorageService.saveToken(data['access_token']);
+          }
+          if (data.containsKey('id')) {
+            await LocalStorageService.saveUserId(data['id'].toString());
+          }
+          if (data.containsKey('user')) {
+            final user = data['user'];
+            await LocalStorageService.saveUserData(
+              email: user['email'] ?? '',
+              firstName: user['first_name'] ?? '',
+              lastName: user['last_name'] ?? '',
+            );
+          }
 
-        // Save to local storage
-        await LocalStorageService.saveToken(accessToken);
-        // await LocalStorageService.saveUserId(userId);
-
-        return ApiResponse.completed(data);
+          return ApiResponse.completed(data);
+        } else {
+          return ApiResponse.error(data['message'] ?? "Login failed");
+        }
       } else {
-        return ApiResponse.error("Failed to login: ${response.statusCode}");
+        return ApiResponse.error(
+          data['message'] ?? "Failed to login: ${response.statusCode}",
+        );
       }
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      print("Login Error: $e");
+      return ApiResponse.error("An error occurred during login");
     }
   }
 }

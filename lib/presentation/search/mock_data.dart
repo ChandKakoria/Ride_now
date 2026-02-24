@@ -36,6 +36,17 @@ class RideData {
     this.isVerifiedProfile = false,
     this.cancellationTrend,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'pickup_time': "2026-02-24T$startTime:00Z", // Mocking ISO format
+      'dropoff_time': "2026-02-24T$endTime:00Z",
+      'price': price,
+      'status': isFull ? 'full' : 'available',
+      'created_by': driverName,
+      'passenger_count': 1, // Mocking
+    };
+  }
 }
 
 final List<RideData> mockRides = [

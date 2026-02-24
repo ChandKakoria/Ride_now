@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/presentation/search/mock_data.dart';
 import 'package:ride_now/presentation/rides/cancel_ride_bottom_sheets.dart';
+import 'package:intl/intl.dart';
 
 class RideDetailsScreen extends StatelessWidget {
-  final RideData ride;
+  final Map<String, dynamic> rideMap;
 
-  const RideDetailsScreen({super.key, required this.ride});
+  const RideDetailsScreen({super.key, required this.rideMap});
 
   @override
   Widget build(BuildContext context) {
+    final pickupTime = _parseTime(rideMap['pickup_time']);
+    final dropoffTime = _parseTime(rideMap['dropoff_time']);
+    final price = rideMap['price']?.toDouble() ?? 0.0;
+    final driverName = rideMap['created_by'] ?? "Unknown";
+    final passengers = rideMap['passenger_count'] ?? 1;
+    final date = _parseDate(rideMap['pickup_time']);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -31,21 +38,19 @@ class RideDetailsScreen extends StatelessWidget {
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.only(
-              bottom: 100,
-            ), // Space for bottom button
+            padding: const EdgeInsets.only(bottom: 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Date Header
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 12.0,
                   ),
                   child: Text(
-                    "Thursday, 5 February", // Hardcoded date matching design for now, or could pass date
-                    style: TextStyle(
+                    date,
+                    style: const TextStyle(
                       color: Color(0xFF003B4D),
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -53,7 +58,7 @@ class RideDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 // Timeline Section
-                _buildTimeline(context),
+                _buildTimeline(pickupTime, dropoffTime),
                 const SizedBox(height: 16),
                 Divider(thickness: 8, color: Colors.grey[100]),
 
@@ -67,16 +72,16 @@ class RideDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "1 passenger",
-                        style: TextStyle(
+                        "$passengers passenger",
+                        style: const TextStyle(
                           color: Color(0xFF003B4D),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
-                        "\u20B9 ${ride.price?.toStringAsFixed(2) ?? '0.00'}",
-                        style: TextStyle(
+                        "\u20B9 ${price.toStringAsFixed(2)}",
+                        style: const TextStyle(
                           color: Color(0xFF003B4D),
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -87,79 +92,12 @@ class RideDetailsScreen extends StatelessWidget {
                 ),
                 Divider(thickness: 8, color: Colors.grey[100]),
 
-                // Ad Banner Placeholder
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  height: 60,
-                  width: double.infinity,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        // Mock Ad content
-                        Container(width: 60, color: Colors.purple[100]),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            "Delta Exchange - 1 Lac* Cash...",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.all(8),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            "Refer...",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(thickness: 8, color: Colors.grey[100]),
-
                 // Driver Section
-                _buildDriverSection(),
+                _buildDriverSection(driverName),
 
                 Divider(height: 1, color: Colors.grey[200]),
 
-                // Cancellation Policy / Extra Info
-                if (ride.cancellationTrend != null)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today_outlined,
-                          color: Colors.grey[600],
-                          size: 20,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          ride.cancellationTrend!,
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
                 const SizedBox(height: 40),
-                const SizedBox(height: 10),
                 Center(
                   child: TextButton(
                     onPressed: () {
@@ -179,24 +117,13 @@ class RideDetailsScreen extends StatelessWidget {
                     child: const Text(
                       "Cancel your ride",
                       style: TextStyle(
-                        color: Colors.red, // Destructive action color
+                        color: Colors.red,
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
                   ),
                 ),
-                const Center(
-                  child: Text(
-                    "Report this ride",
-                    style: TextStyle(
-                      color: Color(0xFF00A3E0),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -223,7 +150,7 @@ class RideDetailsScreen extends StatelessWidget {
                   // Book Action
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00A3E0), // Cyan Blue
+                  backgroundColor: const Color(0xFF00A3E0),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -253,35 +180,29 @@ class RideDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeline(BuildContext context) {
+  Widget _buildTimeline(String pickup, String dropoff) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Time Column
             SizedBox(
               width: 50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ride.startTime,
+                    pickup,
                     style: const TextStyle(
                       color: Color(0xFF003B4D),
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const Spacer(),
                   Text(
-                    ride.duration,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
-                  ),
-                  const Spacer(), // Pushes end time to bottom
-                  Text(
-                    ride.endTime,
+                    dropoff,
                     style: const TextStyle(
                       color: Color(0xFF003B4D),
                       fontSize: 16,
@@ -291,105 +212,34 @@ class RideDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Timeline Line
             Column(
               children: [
-                _buildTimelineNode(isStart: true),
-                Expanded(
-                  child: Container(
-                    width: 4,
-                    color: Colors.grey[300], // Light gray line
-                  ),
-                ),
-                // If there is an intermediate stop, we could add a node here
-                // For now just consistent line as per design
-                _buildTimelineNode(isStart: false),
+                _buildTimelineNode(),
+                Expanded(child: Container(width: 4, color: Colors.grey[300])),
+                _buildTimelineNode(),
               ],
             ),
             const SizedBox(width: 16),
-
-            // Address Details
-            Expanded(
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Start
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            ride.startCity,
-                            style: const TextStyle(
-                              color: Color(0xFF003B4D),
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(
-                            Icons.map_outlined,
-                            size: 16,
-                            color: Colors.blue[300],
-                          ), // Map icon placeholder
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        ride.startAddress,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Text(
+                    "Pickup Location",
+                    style: TextStyle(
+                      color: Color(0xFF003B4D),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-
-                  // Intermediate Stop (Yamuna Nagar)
-                  if (ride.intermediateCity != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Text(
-                        ride.intermediateCity!,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 14),
-                      ),
-                    )
-                  else
-                    // Placeholder for spacing if no intermediate
-                    const SizedBox(height: 20),
-
-                  // End
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            ride.endCity,
-                            style: const TextStyle(
-                              color: Color(0xFF003B4D),
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(
-                            Icons.map_outlined,
-                            size: 16,
-                            color: Colors.blue[300],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        ride.endAddress,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Text(
+                    "Dropoff Location",
+                    style: TextStyle(
+                      color: Color(0xFF003B4D),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
@@ -400,7 +250,7 @@ class RideDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineNode({required bool isStart}) {
+  Widget _buildTimelineNode() {
     return Container(
       width: 12,
       height: 12,
@@ -412,84 +262,64 @@ class RideDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDriverSection() {
+  Widget _buildDriverSection(String name) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
+      child: Row(
         children: [
-          Row(
+          const CircleAvatar(
+            radius: 28,
+            backgroundColor: Color(0xFFE0F7FA),
+            child: Icon(Icons.person, color: Colors.grey, size: 30),
+          ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  const CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Color(0xFFE0F7FA), // Light cyan bg
-                    child: Icon(Icons.person, color: Colors.grey, size: 30),
-                  ),
-                  if (ride.isVerifiedProfile)
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.verified,
-                          color: Colors.blue,
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                ],
+              Text(
+                name,
+                style: const TextStyle(
+                  color: Color(0xFF003B4D),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const Row(
                 children: [
+                  Icon(Icons.star, color: Colors.grey, size: 16),
+                  SizedBox(width: 4),
                   Text(
-                    ride.driverName,
-                    style: const TextStyle(
-                      color: Color(0xFF003B4D),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.grey, size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${ride.rating.toStringAsFixed(2)}/5 - ${ride.ratingCount} ratings",
-                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                      ),
-                    ],
+                    "4.5/5 - 12 ratings",
+                    style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                 ],
               ),
-              const Spacer(),
-              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
             ],
           ),
-          if (ride.isVerifiedProfile)
-            Padding(
-              padding: const EdgeInsets.only(top: 12.0),
-              child: Row(
-                children: [
-                  const Icon(Icons.verified_user, color: Colors.blue, size: 20),
-                  const SizedBox(width: 12),
-                  Text(
-                    "Verified Profile",
-                    style: TextStyle(color: Colors.grey[700], fontSize: 15),
-                  ),
-                ],
-              ),
-            ),
+          const Spacer(),
+          const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         ],
       ),
     );
+  }
+
+  String _parseTime(String? timeStr) {
+    if (timeStr == null) return "--:--";
+    try {
+      final dt = DateTime.parse(timeStr);
+      return DateFormat('HH:mm').format(dt);
+    } catch (e) {
+      return "--:--";
+    }
+  }
+
+  String _parseDate(String? timeStr) {
+    if (timeStr == null) return "Date unknown";
+    try {
+      final dt = DateTime.parse(timeStr);
+      return DateFormat('EEEE, d MMMM').format(dt);
+    } catch (e) {
+      return "Date unknown";
+    }
   }
 }

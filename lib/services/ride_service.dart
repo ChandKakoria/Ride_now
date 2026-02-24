@@ -43,4 +43,35 @@ class RideService {
       return ApiResponse.error(e.toString());
     }
   }
+
+  Future<ApiResponse<Map<String, dynamic>>> searchRides({
+    required String pickup,
+    required String dropoff,
+  }) async {
+    final String url = ApiConstants.searchRides(pickup, dropoff);
+
+    try {
+      print("SearchRides Request: $url");
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      print("SearchRides Response Code: ${response.statusCode}");
+      print("SearchRides Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return ApiResponse.completed(data);
+      } else {
+        return ApiResponse.error(
+          "Failed to search rides: ${response.statusCode}",
+        );
+      }
+    } catch (e) {
+      print("SearchRides Error: $e");
+      return ApiResponse.error(e.toString());
+    }
+  }
 }

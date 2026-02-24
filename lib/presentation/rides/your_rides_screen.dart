@@ -32,7 +32,7 @@ class YourRidesScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               itemCount: mockRides.length, // Using mock data for demo
               itemBuilder: (context, index) {
-                return RideCard(ride: mockRides[index]);
+                return RideCard(rideMap: mockRides[index].toMap());
               },
             ),
             // Past Rides (Empty for demo or duplicate mock)
@@ -40,7 +40,9 @@ class YourRidesScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               itemCount: 1,
               itemBuilder: (context, index) {
-                return RideCard(ride: mockRides[0]); // Just showing one
+                return RideCard(
+                  rideMap: mockRides[0].toMap(),
+                ); // Just showing one
               },
             ),
           ],
