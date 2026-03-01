@@ -6,6 +6,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:ride_now/providers/create_ride_provider.dart';
 import 'package:ride_now/services/place_service.dart';
 import 'package:ride_now/presentation/publish/drop_off_screen.dart';
+import 'package:ride_now/presentation/publish/widgets/location_search_bar.dart';
+import 'package:ride_now/presentation/publish/widgets/location_prediction_list.dart';
+import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
 
 class PickUpScreen extends StatefulWidget {
   const PickUpScreen({super.key});
@@ -20,345 +23,164 @@ class _PickUpScreenState extends State<PickUpScreen> {
   List<Map<String, dynamic>> _predictions = [];
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
-  bool _isSearching = false;
-  bool _isMapVisible = false;
-  bool _hasLocationPermission = false;
-
-  static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(37.7749, -122.4194), // Default to SF
-    zoom: 14.4746,
-  );
+  bool _isSearching = false,
+      _isMapVisible = false,
+      _hasLocationPermission = false;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<CreateRideProvider>(context, listen: false);
+    final provider = context.read<CreateRideProvider>();
     if (provider.pickupLocation != null && provider.pickupCoordinates != null) {
       _controller.text = provider.pickupLocation!;
       _updateMarker(provider.pickupCoordinates!, provider.pickupLocation!);
       _isMapVisible = true;
     }
-    _checkLocationPermission();
+    _checkPermission();
   }
 
-  Future<void> _checkLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return;
-    }
-
-    if (mounted) {
-      setState(() {
-        _hasLocationPermission = true;
-      });
+  Future<void> _checkPermission() async {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      setState(() => _hasLocationPermission = true);
     }
   }
 
-  Timer? _debounce;
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    _mapController?.dispose();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onSearchChanged(String query) {
+  void _onSearch(String q) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
-      if (query.isEmpty) {
+      if (q.isEmpty) {
         setState(() {
           _predictions = [];
           _isSearching = false;
         });
         return;
       }
-
-      final results = await _placeService.getSuggestions(query);
-      if (mounted) {
-        setState(() {
-          _predictions = results;
-          _isSearching = true;
-        });
-      }
+      final res = await _placeService.getSuggestions(q);
+      setState(() {
+        _predictions = res;
+        _isSearching = true;
+      });
     });
   }
 
-  void _onPredictionSelected(Map<String, dynamic> prediction) async {
-    final placeId = prediction['place_id'];
-    final description = prediction['description'];
-
-    _controller.text = description;
-    setState(() {
-      _predictions = [];
-      _isSearching = false;
-    });
-
-    final details = await _placeService.getPlaceDetails(placeId);
+  void _onSelected(Map<String, dynamic> p) async {
+    final details = await _placeService.getPlaceDetails(p['place_id']);
     if (details != null && mounted) {
-      final lat = details['lat'];
-      final lng = details['lng'];
-      final latLng = LatLng(lat, lng);
-
-      _updateMarker(latLng, description);
-
-      if (_isMapVisible) {
-        _mapController?.animateCamera(CameraUpdate.newLatLng(latLng));
-      } else {
-        setState(() {
-          _isMapVisible = true;
-        });
-      }
-
+      final latLng = LatLng(details['lat'], details['lng']);
+      _controller.text = p['description'];
+      setState(() {
+        _predictions = [];
+        _isSearching = _isMapVisible = true;
+      });
+      _updateMarker(latLng, p['description']);
+      _mapController?.animateCamera(CameraUpdate.newLatLng(latLng));
       context.read<CreateRideProvider>().updatePickupLocation(
-        description,
+        p['description'],
         latLng,
-        placeId,
+        p['place_id'],
       );
     }
   }
 
-  void _updateMarker(LatLng position, String title) {
-    setState(() {
-      _markers = {
+  void _updateMarker(LatLng pos, String title) {
+    setState(
+      () => _markers = {
         Marker(
-          markerId: const MarkerId('pickup'),
-          position: position,
+          markerId: const MarkerId('p'),
+          position: pos,
           infoWindow: InfoWindow(title: title),
           draggable: true,
-          onDragEnd: (newPosition) {
-            _onMarkerDragEnd(newPosition);
-          },
+          onDragEnd: _onDrag,
         ),
-      };
-    });
+      },
+    );
   }
 
-  void _onMarkerDragEnd(LatLng position) async {
-    final address = await _placeService.getAddressFromCoordinates(
-      position.latitude,
-      position.longitude,
+  void _onDrag(LatLng pos) async {
+    final addr = await _placeService.getAddressFromCoordinates(
+      pos.latitude,
+      pos.longitude,
     );
-
-    if (address != null && mounted) {
-      _controller.text = address;
-      _updateMarker(position, address);
-
-      // We don't have a placeId for dragged locations, pass null or maybe handle it differently
-      context.read<CreateRideProvider>().updatePickupLocation(
-        address,
-        position,
-        null, // Place ID is lost when dragging to a new spot
-      );
+    if (addr != null && mounted) {
+      _controller.text = addr;
+      _updateMarker(pos, addr);
+      context.read<CreateRideProvider>().updatePickupLocation(addr, pos, null);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          _isMapVisible
-              ? GoogleMap(
-                  initialCameraPosition: _initialPosition,
-                  markers: _markers,
-                  onMapCreated: (controller) {
-                    _mapController = controller;
-                    final provider = context.read<CreateRideProvider>();
-                    if (provider.pickupCoordinates != null) {
-                      controller.animateCamera(
-                        CameraUpdate.newLatLng(provider.pickupCoordinates!),
-                      );
-                    }
-                  },
-                  myLocationEnabled: _hasLocationPermission,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                )
-              : Container(
-                  color: const Color(0xFFF0F4F8), // Placeholder color
-                  child: const Center(
+      body: SharedGradientBackground(
+        child: Stack(
+          children: [
+            _buildMap(),
+            SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.map_outlined,
-                          size: 48,
-                          color: Colors.black26,
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          "Search location to view on map",
-                          style: TextStyle(color: Colors.black45),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-          SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F4F8),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.arrow_back_ios_new,
-                                size: 20,
-                                color: Color(0xFF5A6A78),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                            Expanded(
-                              child: TextField(
-                                controller: _controller,
-                                onChanged: _onSearchChanged,
-                                style: const TextStyle(
-                                  color: Color(0xFF003B5C),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                decoration: const InputDecoration(
-                                  hintText: "Enter pickup location",
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF7D8C98),
-                                    fontSize: 16,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (_controller.text.isNotEmpty)
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Color(0xFF5A6A78),
-                                ),
-                                onPressed: () {
-                                  _controller.clear();
-                                  _onSearchChanged('');
-                                },
-                              ),
-                            const SizedBox(width: 8),
-                          ],
+                        LocationSearchBar(
+                          controller: _controller,
+                          onChanged: _onSearch,
+                          onClear: () {
+                            _controller.clear();
+                            _onSearch('');
+                          },
+                          onBack: () => Navigator.pop(context),
+                          hintText: "Enter pickup location",
                         ),
                         if (_isSearching && _predictions.isNotEmpty)
-                          Container(
-                            constraints: const BoxConstraints(maxHeight: 250),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                top: BorderSide(color: Colors.black12),
-                              ),
-                            ),
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              itemCount: _predictions.length,
-                              separatorBuilder: (context, index) =>
-                                  const Divider(
-                                    height: 1,
-                                    indent: 16,
-                                    endIndent: 16,
-                                  ),
-                              itemBuilder: (context, index) {
-                                final prediction = _predictions[index];
-                                return ListTile(
-                                  leading: const Icon(
-                                    Icons.location_on_outlined,
-                                    color: Color(0xFF7D8C98),
-                                  ),
-                                  title: Text(
-                                    prediction['structured_formatting']['main_text'] ??
-                                        prediction['description'],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF003B5C),
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    prediction['structured_formatting']['secondary_text'] ??
-                                        "",
-                                    style: const TextStyle(
-                                      color: Color(0xFF7D8C98),
-                                      fontSize: 13,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  onTap: () =>
-                                      _onPredictionSelected(prediction),
-                                );
-                              },
-                            ),
+                          LocationPredictionList(
+                            predictions: _predictions,
+                            onSelected: _onSelected,
                           ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final provider = context.read<CreateRideProvider>();
-          if (provider.pickupCoordinates != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const DropOffScreen()),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Please select a valid pickup location"),
+        onPressed: () =>
+            context.read<CreateRideProvider>().pickupCoordinates != null
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(builder: (c) => const DropOffScreen()),
+              )
+            : ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Select a pickup location")),
               ),
-            );
-          }
-        },
         backgroundColor: const Color(0xFF00A3E0),
-        shape: const CircleBorder(),
         child: const Icon(Icons.arrow_forward, color: Colors.white),
       ),
     );
   }
+
+  Widget _buildMap() => _isMapVisible
+      ? GoogleMap(
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(37.77, -122.41),
+            zoom: 14,
+          ),
+          markers: _markers,
+          onMapCreated: (c) => _mapController = c,
+          myLocationEnabled: _hasLocationPermission,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+        )
+      : Container(
+          color: Colors.transparent,
+          child: const Center(child: Text("Search location to view on map")),
+        );
 }

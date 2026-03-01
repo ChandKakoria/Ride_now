@@ -45,6 +45,16 @@ class LocalStorageService {
   static String? getFirstName() => _box.get(_firstNameKey);
   static String? getLastName() => _box.get(_lastNameKey);
 
+  static const String _userKey = 'user_data';
+
+  static Future<void> saveUser(String userJson) async {
+    await _box.put(_userKey, userJson);
+  }
+
+  static String? getUser() {
+    return _box.get(_userKey);
+  }
+
   static Future<void> clearAll() async {
     await _box.clear();
   }

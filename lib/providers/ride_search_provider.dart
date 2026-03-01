@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ride_now/services/ride_service.dart';
 import 'package:ride_now/core/api_response.dart';
 
+import 'package:ride_now/core/models/ride_model.dart';
+
 class RideSearchProvider extends ChangeNotifier {
   final RideService _rideService = RideService();
 
@@ -10,7 +12,7 @@ class RideSearchProvider extends ChangeNotifier {
   DateTime _selectedDate = DateTime.now();
   int _passengerCount = 1;
 
-  List<dynamic> _searchResults = [];
+  List<RideModel> _searchResults = [];
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -19,7 +21,7 @@ class RideSearchProvider extends ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
   int get passengerCount => _passengerCount;
 
-  List<dynamic> get searchResults => _searchResults;
+  List<RideModel> get searchResults => _searchResults;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -51,6 +53,9 @@ class RideSearchProvider extends ChangeNotifier {
   }
 
   Future<void> searchRides() async {
+    print(
+      "RideSearchProvider: searchRides() triggered for $_source to $_destination",
+    );
     if (_source == null || _destination == null) return;
 
     _isLoading = true;
@@ -65,7 +70,7 @@ class RideSearchProvider extends ChangeNotifier {
     _isLoading = false;
 
     if (response.status == Status.COMPLETED) {
-      _searchResults = response.data?['rides'] ?? [];
+      _searchResults = response.data ?? [];
     } else {
       _errorMessage = response.message;
       _searchResults = [];

@@ -1,76 +1,123 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:ride_now/core/api_response.dart';
 import 'package:ride_now/core/api_constants.dart';
+import 'package:ride_now/core/api_utils.dart';
+import 'package:ride_now/core/app_strings.dart';
+import 'package:ride_now/core/models/ride_model.dart';
 import 'package:ride_now/services/local_storage_service.dart';
 
 class RideService {
-  Future<ApiResponse<Map<String, dynamic>>> createRide(
-    Map<String, dynamic> rideData,
-  ) async {
-    final String url = ApiConstants.createRide;
-    final String? token = LocalStorageService.getToken();
-
-    if (token == null) {
-      return ApiResponse.error("User not authenticated");
-    }
-
-    try {
-      print("CreateRide Payload: $url");
-      print("Body: ${jsonEncode(rideData)}");
-
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
-        body: jsonEncode(rideData),
-      );
-
-      print("CreateRide Response Code: ${response.statusCode}");
-      print("CreateRide Response Body: ${response.body}");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        return ApiResponse.completed(data);
-      } else {
-        return ApiResponse.error(
-          "Failed to create ride: ${response.statusCode}",
-        );
-      }
-    } catch (e) {
-      return ApiResponse.error(e.toString());
-    }
-  }
-
-  Future<ApiResponse<Map<String, dynamic>>> searchRides({
+  Future<ApiResponse<List<RideModel>>> searchRides({
     required String pickup,
     required String dropoff,
   }) async {
+    print("RideService: searchRides($pickup, $dropoff) triggered");
     final String url = ApiConstants.searchRides(pickup, dropoff);
 
     try {
-      print("SearchRides Request: $url");
-
       final response = await http.get(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
       );
 
-      print("SearchRides Response Code: ${response.statusCode}");
-      print("SearchRides Response Body: ${response.body}");
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return ApiResponse.completed(data);
-      } else {
-        return ApiResponse.error(
-          "Failed to search rides: ${response.statusCode}",
-        );
-      }
+      return ApiUtils.handleResponse<List<RideModel>>(response, (data) {
+        final List list = data['rides'] ?? [];
+        return list.map((e) {
+          final rideJson = e['ride_details'] ?? e;
+          return RideModel.fromJson(rideJson);
+        }).toList();
+      });
     } catch (e) {
-      print("SearchRides Error: $e");
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<List<RideModel>>> getMyRides() async {
+    print("RideService: getMyRides() triggered");
+    final String url = ApiConstants.myRides;
+    final String? token = LocalStorageService.getToken();
+
+    if (token == null) {
+      print("RideService: Auth token missing for getMyRides");
+      return ApiResponse.error(AppStrings.errorAuth);
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      return ApiUtils.handleResponse<List<RideModel>>(response, (data) {
+        final List list = data['rides'] ?? [];
+        return list.map((e) {
+          final rideJson = e['ride_details'] ?? e;
+          return RideModel.fromJson(rideJson);
+        }).toList();
+      });
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<List<RideModel>>> getMyBookedRides() async {
+    print("RideService: getMyBookedRides() triggered");
+    final String url = ApiConstants.bookedRides;
+    final String? token = LocalStorageService.getToken();
+
+    if (token == null) {
+      print("RideService: Auth token missing for getMyBookedRides");
+      return ApiResponse.error(AppStrings.errorAuth);
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      return ApiUtils.handleResponse<List<RideModel>>(response, (data) {
+        final List list = data['booked_rides'] ?? [];
+        return list.map((e) {
+          final rideJson = e['ride_details'] ?? e;
+          return RideModel.fromJson(rideJson);
+        }).toList();
+      });
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<RideModel>> getRideDetails(String id) async {
+    print("RideService: getRideDetails($id) triggered");
+    final String url = ApiConstants.rideDetails(id);
+    final String? token = LocalStorageService.getToken();
+
+    if (token == null) {
+      print("RideService: Auth token missing for getRideDetails");
+      return ApiResponse.error(AppStrings.errorAuth);
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      return ApiUtils.handleResponse<RideModel>(
+        response,
+        (data) => RideModel.fromJson(data['ride']),
+      );
+    } catch (e) {
       return ApiResponse.error(e.toString());
     }
   }
