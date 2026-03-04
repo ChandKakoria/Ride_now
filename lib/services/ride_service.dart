@@ -10,9 +10,10 @@ class RideService {
   Future<ApiResponse<List<RideModel>>> searchRides({
     required String pickup,
     required String dropoff,
+    String? date,
   }) async {
-    print("RideService: searchRides($pickup, $dropoff) triggered");
-    final String url = ApiConstants.searchRides(pickup, dropoff);
+    print("RideService: searchRides($pickup, $dropoff, $date) triggered");
+    final String url = ApiConstants.searchRides(pickup, dropoff, date);
 
     try {
       final response = await http.get(

@@ -14,7 +14,11 @@ class ApiConstants {
   static String get bookRide => "$baseUrl/rides/book";
   static String get acceptRequest => "$baseUrl/rides/requests/approve";
   static String get profile => "$baseUrl/profile";
+  static String get vehicles => "$baseUrl/vehicles";
+  static String get changePassword => "$baseUrl/change-password";
+  static String get privacy => "$baseUrl/privacy";
+  static String get terms => "$baseUrl/terms";
   static String rideDetails(String id) => "$baseUrl/rides/$id";
-  static String searchRides(String pickup, String dropoff) =>
-      "$baseUrl/rides/search?pickup_location=$pickup&dropoff_location=$dropoff";
+  static String searchRides(String pickup, String dropoff, String? date) =>
+      "$baseUrl/rides/search?pickup_location=$pickup&dropoff_location=$dropoff${date != null ? '&date=$date' : ''}";
 }

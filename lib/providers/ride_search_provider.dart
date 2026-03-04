@@ -62,9 +62,11 @@ class RideSearchProvider extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
+    final String dateStr = _selectedDate.toIso8601String().split('T')[0];
     final response = await _rideService.searchRides(
       pickup: _source!,
       dropoff: _destination!,
+      date: dateStr,
     );
 
     _isLoading = false;

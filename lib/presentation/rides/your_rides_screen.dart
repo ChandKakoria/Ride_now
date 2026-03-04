@@ -66,7 +66,7 @@ class _YourRidesScreenState extends State<YourRidesScreen>
     );
   }
 
-  Widget _buildTabBar() => Container(
+  Widget _buildTabBar() =>  Container(
     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     decoration: BoxDecoration(
       color: Colors.grey[100],

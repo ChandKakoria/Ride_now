@@ -4,6 +4,7 @@ import 'package:ride_now/providers/ride_search_provider.dart';
 import 'package:ride_now/providers/create_ride_provider.dart';
 import 'package:ride_now/providers/rides_provider.dart';
 import 'package:ride_now/providers/user_provider.dart';
+import 'package:ride_now/providers/vehicle_provider.dart';
 
 import 'package:ride_now/presentation/login/login_screen.dart';
 import 'package:ride_now/presentation/root_screen.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CreateRideProvider()),
         ChangeNotifierProvider(create: (_) => RidesProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => VehicleProvider()),
       ],
       child: MaterialApp(
         title: 'Ride Now',

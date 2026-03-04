@@ -27,11 +27,8 @@ class ProfileHeader extends StatelessWidget {
                 offset: const Offset(0, 5),
               ),
             ],
-            image: const DecorationImage(
-              image: NetworkImage("https://i.pravatar.cc/300?img=11"),
-              fit: BoxFit.cover,
-            ),
           ),
+          child: const Icon(Icons.person, size: 40, color: Color(0xFF00A3E0)),
         ),
         const SizedBox(width: 16),
         Expanded(
