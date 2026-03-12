@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/presentation/rides/widgets/cancel_ride_explanation_sheet.dart';
+import 'package:sakhi_yatra/presentation/rides/widgets/cancel_ride_explanation_sheet.dart';
 
 class CancelRideReasonBottomSheet extends StatelessWidget {
   const CancelRideReasonBottomSheet({super.key});

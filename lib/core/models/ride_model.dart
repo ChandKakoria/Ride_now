@@ -1,5 +1,6 @@
-import 'package:ride_now/core/models/ride_request_model.dart';
-import 'package:ride_now/core/models/booking_model.dart';
+import 'package:sakhi_yatra/core/models/ride_request_model.dart';
+import 'package:sakhi_yatra/core/models/booking_model.dart';
+import 'package:sakhi_yatra/core/models/vehicle_model.dart';
 
 class RideModel {
   final String id;
@@ -23,6 +24,7 @@ class RideModel {
   final String? userId;
   final int? availableSeats;
   final int? bookedSeats;
+  final VehicleModel? vehicle;
 
   RideModel({
     required this.id,
@@ -46,6 +48,7 @@ class RideModel {
     this.userId,
     this.availableSeats,
     this.bookedSeats,
+    this.vehicle,
   });
 
   factory RideModel.fromJson(Map<String, dynamic> json) {
@@ -80,6 +83,11 @@ class RideModel {
       userId: json['user_id'],
       availableSeats: json['available_seats'],
       bookedSeats: json['booked_seats'],
+      vehicle: json['vehicle'] != null
+          ? VehicleModel.fromJson(json['vehicle'])
+          : json['driver_vehicle'] != null
+          ? VehicleModel.fromJson(json['driver_vehicle'])
+          : null,
     );
   }
 

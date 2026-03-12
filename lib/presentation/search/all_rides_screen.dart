@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/providers/ride_search_provider.dart';
+import 'package:sakhi_yatra/providers/ride_search_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/presentation/widgets/ride_card.dart';
+import 'package:sakhi_yatra/presentation/widgets/ride_card.dart';
 import 'package:intl/intl.dart';
-import 'package:ride_now/core/app_strings.dart';
-import 'package:ride_now/presentation/rides/widgets/ride_list_status_view.dart';
-import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/core/app_strings.dart';
+import 'package:sakhi_yatra/presentation/rides/widgets/ride_list_status_view.dart';
+import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class AllRidesScreen extends StatelessWidget {
   const AllRidesScreen({super.key});
@@ -58,31 +59,22 @@ class AllRidesScreen extends StatelessWidget {
     final source = provider.source ?? "Source";
     final destination = provider.destination ?? "Destination";
 
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+    return CommonAppBar(
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.grey, size: 20),
+        icon: const Icon(Icons.arrow_back_ios, size: 20),
         onPressed: () => Navigator.pop(context),
       ),
-      titleSpacing: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "${_getShortName(source)} \u2192 ${_getShortName(destination)}",
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text("${_getShortName(source)} \u2192 ${_getShortName(destination)}"),
           Text(
             "${DateFormat('EEE, d MMM').format(provider.selectedDate)}, ${provider.passengerCount} passenger",
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+            style: const TextStyle(color: Colors.white70, fontSize: 13),
           ),
         ],
       ),
+      centerTitle: false,
       actions: [
         TextButton(
           onPressed: () {},

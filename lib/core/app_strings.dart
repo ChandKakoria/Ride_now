@@ -1,6 +1,6 @@
 class AppStrings {
   // App Title
-  static const String appName = 'Ride Now';
+  static const String appName = 'SakhiYatra';
 
   // API Message Constants
   static const String errorAuth = 'User not authenticated';

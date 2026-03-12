@@ -42,19 +42,23 @@ class CreateRideProvider extends ChangeNotifier {
 
   String? _tripDuration;
   String? _tripDistance;
+  int? _distanceMeters;
   List<LatLng> _polylinePoints = [];
 
   String? get tripDuration => _tripDuration;
   String? get tripDistance => _tripDistance;
+  int? get distanceMeters => _distanceMeters;
   List<LatLng> get polylinePoints => _polylinePoints;
 
   void updateRouteDetails(
     String duration,
     String distance,
+    int? meters,
     List<LatLng> points,
   ) {
     _tripDuration = duration;
     _tripDistance = distance;
+    _distanceMeters = meters;
     _polylinePoints = points;
     notifyListeners();
   }

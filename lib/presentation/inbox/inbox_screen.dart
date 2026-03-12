@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class InboxScreen extends StatelessWidget {
   const InboxScreen({super.key});
@@ -7,10 +8,7 @@ class InboxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text("Inbox"),
-      ),
+      appBar: const CommonAppBar(title: Text("Inbox")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

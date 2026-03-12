@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/models/ride_model.dart';
+import 'package:sakhi_yatra/core/models/ride_model.dart';
 import 'package:intl/intl.dart';
 
 class RideCardRouteInfo extends StatelessWidget {

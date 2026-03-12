@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/presentation/publish/pick_up_screen.dart';
+import 'package:sakhi_yatra/presentation/publish/pick_up_screen.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class PublishScreen extends StatelessWidget {
   const PublishScreen({super.key});
@@ -8,18 +9,7 @@ class PublishScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          "Publish a Ride",
-          style: TextStyle(
-            color: Color(0xFF003B4D),
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      appBar: const CommonAppBar(title: Text("Publish a Ride")),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),

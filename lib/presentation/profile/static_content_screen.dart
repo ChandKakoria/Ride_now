@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/user_provider.dart';
-import 'package:ride_now/core/api_response.dart';
+import 'package:sakhi_yatra/providers/user_provider.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class StaticContentScreen extends StatefulWidget {
   final String title;
@@ -27,12 +28,7 @@ class _StaticContentScreenState extends State<StaticContentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: const Color(0xFF003B4D),
-      ),
+      appBar: CommonAppBar(title: Text(widget.title)),
       body: Consumer<UserProvider>(
         builder: (context, provider, _) {
           final res = widget.title.contains("Privacy")

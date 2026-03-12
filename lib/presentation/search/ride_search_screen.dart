@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/ride_search_provider.dart';
-import 'package:ride_now/presentation/search/all_rides_screen.dart';
-import 'package:ride_now/presentation/search/widgets/search_header.dart';
+import 'package:sakhi_yatra/providers/ride_search_provider.dart';
+import 'package:sakhi_yatra/presentation/search/all_rides_screen.dart';
+import 'package:sakhi_yatra/presentation/search/widgets/search_header.dart';
+import 'package:sakhi_yatra/presentation/search/location_selection_screen.dart';
+import 'package:sakhi_yatra/providers/connectivity_provider.dart';
 
 class RideSearchScreen extends StatefulWidget {
   const RideSearchScreen({super.key});
@@ -44,7 +46,18 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                           icon: Icons.radio_button_unchecked,
                           hint: "Leaving from",
                           value: provider.source,
-                          onChanged: (v) => provider.updateSource(v),
+                          onTap: () async {
+                            final result = await Navigator.push<String>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (c) => const LocationSelectionScreen(
+                                  title: "Leaving from",
+                                  hintText: "Enter pickup location",
+                                ),
+                              ),
+                            );
+                            if (result != null) provider.updateSource(result);
+                          },
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 48),
@@ -54,7 +67,19 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                           icon: Icons.location_on_outlined,
                           hint: "Going to",
                           value: provider.destination,
-                          onChanged: (v) => provider.updateDestination(v),
+                          onTap: () async {
+                            final result = await Navigator.push<String>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (c) => const LocationSelectionScreen(
+                                  title: "Going to",
+                                  hintText: "Enter destination",
+                                ),
+                              ),
+                            );
+                            if (result != null)
+                              provider.updateDestination(result);
+                          },
                         ),
                         const SizedBox(height: 20),
                         _buildDateSelector(context, provider),
@@ -86,6 +111,11 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                   );
                   return;
                 }
+                if (!Provider.of<ConnectivityProvider>(
+                  context,
+                  listen: false,
+                ).checkConnectionAndNotify(context))
+                  return;
                 await provider.searchRides();
                 if (mounted)
                   Navigator.push(
@@ -114,36 +144,45 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
     required IconData icon,
     required String hint,
     String? value,
-    required Function(String) onChanged,
+    required VoidCallback onTap,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0F4F8),
-              borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F4F8),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: const Color(0xFF00A3E0), size: 22),
             ),
-            child: Icon(icon, color: const Color(0xFF00A3E0), size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: TextField(
-              controller: TextEditingController(text: value)
-                ..selection = TextSelection.fromPosition(
-                  TextPosition(offset: value?.length ?? 0),
-                ),
-              onChanged: onChanged,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-              decoration: InputDecoration(
-                hintText: hint,
-                border: InputBorder.none,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    value != null && value.isNotEmpty ? value : hint,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: value != null && value.isNotEmpty
+                          ? const Color(0xFF003B4D)
+                          : Colors.grey[400],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

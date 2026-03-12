@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:ride_now/presentation/main_screen.dart';
-import 'package:ride_now/presentation/login/signup_screen.dart';
-import 'package:ride_now/services/auth_service.dart';
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/presentation/widgets/glass_text_field.dart';
-import 'package:ride_now/core/app_strings.dart';
-import 'package:ride_now/presentation/widgets/auth_background.dart';
+import 'package:sakhi_yatra/presentation/main_screen.dart';
+import 'package:sakhi_yatra/presentation/login/signup_screen.dart';
+import 'package:sakhi_yatra/services/auth_service.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/presentation/widgets/glass_text_field.dart';
+import 'package:sakhi_yatra/core/app_strings.dart';
+import 'package:sakhi_yatra/presentation/widgets/auth_background.dart';
+import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,6 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
+    if (!Provider.of<ConnectivityProvider>(
+      context,
+      listen: false,
+    ).checkConnectionAndNotify(context))
+      return;
     setState(() => _isLoading = true);
     final res = await AuthService().login(
       _emailController.text,

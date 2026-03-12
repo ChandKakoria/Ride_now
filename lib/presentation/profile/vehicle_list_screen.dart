@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/providers/vehicle_provider.dart';
-import 'package:ride_now/presentation/profile/add_vehicle_screen.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/providers/vehicle_provider.dart';
+import 'package:sakhi_yatra/presentation/profile/brand_selection_screen.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class VehicleListScreen extends StatefulWidget {
   const VehicleListScreen({super.key});
@@ -23,12 +24,7 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Vehicles"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: const Color(0xFF003B4D),
-      ),
+      appBar: const CommonAppBar(title: Text("My Vehicles")),
       body: Consumer<VehicleProvider>(
         builder: (context, provider, _) {
           final res = provider.vehicles;
@@ -116,7 +112,7 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
   void _navigateToAdd(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (c) => const AddVehicleScreen()),
+      MaterialPageRoute(builder: (c) => const BrandSelectionScreen()),
     );
   }
 }

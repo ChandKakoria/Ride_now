@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/app_strings.dart';
+import 'package:sakhi_yatra/core/app_strings.dart';
 
 class RideBottomAction extends StatelessWidget {
   final String status;

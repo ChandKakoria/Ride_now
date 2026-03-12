@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ride_now/providers/create_ride_provider.dart';
-import 'package:ride_now/services/place_service.dart';
-import 'package:ride_now/presentation/publish/drop_off_screen.dart';
-import 'package:ride_now/presentation/publish/widgets/location_search_bar.dart';
-import 'package:ride_now/presentation/publish/widgets/location_prediction_list.dart';
-import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/providers/create_ride_provider.dart';
+import 'package:sakhi_yatra/services/place_service.dart';
+import 'package:sakhi_yatra/presentation/publish/drop_off_screen.dart';
+import 'package:sakhi_yatra/presentation/publish/widgets/location_search_bar.dart';
+import 'package:sakhi_yatra/presentation/publish/widgets/location_prediction_list.dart';
+import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
 
 class PickUpScreen extends StatefulWidget {
   const PickUpScreen({super.key});
@@ -25,7 +25,8 @@ class _PickUpScreenState extends State<PickUpScreen> {
   Set<Marker> _markers = {};
   bool _isSearching = false,
       _isMapVisible = false,
-      _hasLocationPermission = false;
+      _hasLocationPermission = false,
+      _isLocating = false;
   Timer? _debounce;
 
   @override
@@ -111,6 +112,80 @@ class _PickUpScreenState extends State<PickUpScreen> {
     }
   }
 
+  Future<void> _useCurrentLocation() async {
+    setState(() => _isLocating = true);
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always) {
+        final position = await Geolocator.getCurrentPosition();
+        final latLng = LatLng(position.latitude, position.longitude);
+        final address = await _placeService.getAddressFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+
+        if (address != null && mounted) {
+          _controller.text = address;
+          setState(() {
+            _isMapVisible = true;
+            _isSearching = false;
+            _predictions = [];
+          });
+          _updateMarker(latLng, address);
+          _mapController?.animateCamera(CameraUpdate.newLatLng(latLng));
+          context.read<CreateRideProvider>().updatePickupLocation(
+            address,
+            latLng,
+            null,
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Location permission denied")),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error getting location: $e")));
+      }
+    } finally {
+      if (mounted) setState(() => _isLocating = false);
+    }
+  }
+
+  Widget _buildCurrentLocationCard() {
+    return Card(
+      margin: const EdgeInsets.only(top: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: ListTile(
+        leading: const Icon(Icons.my_location, color: Color(0xFF00A3E0)),
+        title: const Text(
+          "Use Current Location",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: const Text("Set pickup to your current position"),
+        trailing: _isLocating
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.chevron_right),
+        onTap: _isLocating ? null : _useCurrentLocation,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,7 +216,9 @@ class _PickUpScreenState extends State<PickUpScreen> {
                           LocationPredictionList(
                             predictions: _predictions,
                             onSelected: _onSelected,
-                          ),
+                          )
+                        else if (!_isMapVisible || _isSearching)
+                          _buildCurrentLocationCard(),
                       ],
                     ),
                   ),

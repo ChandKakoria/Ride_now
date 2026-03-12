@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/models/user_model.dart';
-import 'package:ride_now/services/local_storage_service.dart';
+import 'package:sakhi_yatra/core/models/user_model.dart';
+import 'package:sakhi_yatra/services/local_storage_service.dart';
 
 class ProfileVerifySection extends StatelessWidget {
   final UserModel? user;
@@ -11,15 +11,9 @@ class ProfileVerifySection extends StatelessWidget {
     return Column(
       children: [
         _buildItem(
-          icon: Icons.add_circle_outline,
-          text: "Verify your Govt. ID",
-          action: true,
-        ),
-        _buildItem(
-          icon: Icons.add_circle_outline,
-          text: "Confirm email",
-          subtext: user?.email ?? "Not provided",
-          action: true,
+          icon: Icons.email_outlined,
+          text: user?.email ?? "Not provided",
+          iconColor: const Color(0xFF00A3E0),
         ),
         _buildItem(
           icon: Icons.check_circle,

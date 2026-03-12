@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/user_provider.dart';
-import 'package:ride_now/core/api_response.dart';
+import 'package:sakhi_yatra/providers/user_provider.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -15,6 +16,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _oldController = TextEditingController();
   final _newController = TextEditingController();
   final _confirmController = TextEditingController();
+  bool _obscureOld = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
 
   Future<void> _updatePassword() async {
     if (_newController.text != _confirmController.text) {
@@ -63,25 +67,35 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Change Password"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: const Color(0xFF003B4D),
-      ),
+      appBar: const CommonAppBar(title: Text("Change Password")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTextField("Old Password", _oldController, isPassword: true),
+            _buildTextField(
+              "Old Password",
+              _oldController,
+              isPassword: true,
+              isObscured: _obscureOld,
+              onToggle: () => setState(() => _obscureOld = !_obscureOld),
+            ),
             const SizedBox(height: 20),
-            _buildTextField("New Password", _newController, isPassword: true),
+            _buildTextField(
+              "New Password",
+              _newController,
+              isPassword: true,
+              isObscured: _obscureNew,
+              onToggle: () => setState(() => _obscureNew = !_obscureNew),
+            ),
             const SizedBox(height: 20),
             _buildTextField(
               "Confirm New Password",
               _confirmController,
               isPassword: true,
+              isObscured: _obscureConfirm,
+              onToggle: () =>
+                  setState(() => _obscureConfirm = !_obscureConfirm),
             ),
             const SizedBox(height: 40),
             SizedBox(
@@ -117,6 +131,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     String label,
     TextEditingController controller, {
     bool isPassword = false,
+    bool isObscured = false,
+    VoidCallback? onToggle,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,10 +144,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          obscureText: isPassword,
+          obscureText: isPassword ? isObscured : false,
           decoration: InputDecoration(
             filled: true,
             fillColor: const Color(0xFFF0F4F8),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      isObscured ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: onToggle,
+                  )
+                : null,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

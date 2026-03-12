@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:ride_now/presentation/main_screen.dart';
-import 'package:ride_now/services/auth_service.dart';
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/core/models/user_model.dart';
-import 'package:ride_now/presentation/widgets/glass_text_field.dart';
-import 'package:ride_now/core/app_strings.dart';
-import 'package:ride_now/presentation/widgets/auth_background.dart';
+import 'package:sakhi_yatra/presentation/main_screen.dart';
+import 'package:sakhi_yatra/services/auth_service.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/core/models/user_model.dart';
+import 'package:sakhi_yatra/presentation/widgets/glass_text_field.dart';
+import 'package:sakhi_yatra/core/app_strings.dart';
+import 'package:sakhi_yatra/presentation/widgets/auth_background.dart';
+import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,9 +25,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _dob = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  String _selectedGender = 'female';
 
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
+    if (!Provider.of<ConnectivityProvider>(
+      context,
+      listen: false,
+    ).checkConnectionAndNotify(context))
+      return;
     setState(() => _isLoading = true);
     final user = UserModel(
       id: '',
@@ -34,6 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       lastName: _last.text,
       phoneNumber: _phone.text,
       dob: _dob.text,
+      gender: _selectedGender,
     );
     final res = await AuthService().signUp(user, _pass.text);
     setState(() => _isLoading = false);
@@ -141,16 +150,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
             (v == null || v.length < 10) ? AppStrings.tooShort : null,
       ),
       const SizedBox(height: 16),
-      GlassTextField(
-        controller: _dob,
-        hintText: 'Date of Birth (YYYY-MM-DD)',
-        icon: Icons.calendar_today_outlined,
-        inputType: TextInputType.datetime,
-        validator: (v) =>
-            (v == null || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(v))
-            ? AppStrings.dobFormatReq
-            : null,
+      GestureDetector(
+        onTap: () async {
+          final date = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now().subtract(
+              const Duration(days: 365 * 18),
+            ),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now(),
+          );
+          if (date != null) {
+            setState(() {
+              _dob.text =
+                  "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+            });
+          }
+        },
+        child: AbsorbPointer(
+          child: GlassTextField(
+            controller: _dob,
+            hintText: 'Date of Birth (YYYY-MM-DD)',
+            icon: Icons.calendar_today_outlined,
+            validator: (v) =>
+                (v == null || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(v))
+                ? AppStrings.dobFormatReq
+                : null,
+          ),
+        ),
       ),
+      const SizedBox(height: 16),
+      _buildFemaleGenderCard(),
       const SizedBox(height: 16),
       GlassTextField(
         controller: _pass,
@@ -162,6 +192,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     ],
   );
+
+  Widget _buildFemaleGenderCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.2)),
+      ),
+      child: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Icon(Icons.female, color: Colors.white, size: 24),
+          ),
+          Text(
+            "Gender: Female",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildButton() => SizedBox(
     width: double.infinity,

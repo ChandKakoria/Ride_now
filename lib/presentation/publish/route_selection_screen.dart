@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/create_ride_provider.dart';
-import 'package:ride_now/services/place_service.dart';
-import 'package:ride_now/core/utils/map_utils.dart';
-import 'package:ride_now/presentation/publish/widgets/route_selection_sheet.dart';
-import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/providers/create_ride_provider.dart';
+import 'package:sakhi_yatra/services/place_service.dart';
+import 'package:sakhi_yatra/core/utils/map_utils.dart';
+import 'package:sakhi_yatra/presentation/publish/widgets/route_selection_sheet.dart';
+import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
 
 class RouteSelectionScreen extends StatefulWidget {
   const RouteSelectionScreen({super.key});
@@ -103,6 +103,7 @@ class _RouteSelectionScreenState extends State<RouteSelectionScreen> {
     context.read<CreateRideProvider>().updateRouteDetails(
       MapUtils.formatDuration(r['duration']),
       MapUtils.formatDistance(r['distanceMeters']),
+      r['distanceMeters'],
       MapUtils.decodePolyline(r['polyline']['encodedPolyline']),
     );
   }

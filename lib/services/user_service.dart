@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/core/api_constants.dart';
-import 'package:ride_now/core/api_utils.dart';
-import 'package:ride_now/core/app_strings.dart';
-import 'package:ride_now/core/models/user_model.dart';
-import 'package:ride_now/services/local_storage_service.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/core/api_constants.dart';
+import 'package:sakhi_yatra/core/api_utils.dart';
+import 'package:sakhi_yatra/core/app_strings.dart';
+import 'package:sakhi_yatra/core/models/user_model.dart';
+import 'package:sakhi_yatra/services/local_storage_service.dart';
 
 class UserService {
   Future<ApiResponse<UserModel>> getProfile() async {

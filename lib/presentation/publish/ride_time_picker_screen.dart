@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/create_ride_provider.dart';
-import 'package:ride_now/presentation/publish/passenger_count_screen.dart';
-import 'package:ride_now/presentation/publish/widgets/selection_tile.dart';
-import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/providers/create_ride_provider.dart';
+import 'package:sakhi_yatra/presentation/publish/passenger_count_screen.dart';
+import 'package:sakhi_yatra/presentation/publish/widgets/selection_tile.dart';
+import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class RideTimePickerScreen extends StatefulWidget {
   const RideTimePickerScreen({super.key});
@@ -65,11 +66,10 @@ class _RideTimePickerScreenState extends State<RideTimePickerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      appBar: CommonAppBar(
+        title: const Text("Select Time"),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF003B4D)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/services/local_storage_service.dart';
-import 'package:ride_now/main.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/services/local_storage_service.dart';
+import 'package:sakhi_yatra/main.dart';
 
 class ApiUtils {
   static Future<ApiResponse<T>> handleResponse<T>(

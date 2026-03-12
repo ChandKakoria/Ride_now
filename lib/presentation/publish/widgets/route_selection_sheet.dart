@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/utils/map_utils.dart';
-import 'package:ride_now/presentation/publish/widgets/route_option_tile.dart';
-import 'package:ride_now/presentation/publish/ride_time_picker_screen.dart';
+import 'package:sakhi_yatra/core/utils/map_utils.dart';
+import 'package:sakhi_yatra/presentation/publish/widgets/route_option_tile.dart';
+import 'package:sakhi_yatra/presentation/publish/ride_time_picker_screen.dart';
 
 class RouteSelectionSheet extends StatelessWidget {
   final ScrollController controller;

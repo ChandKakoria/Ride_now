@@ -1,3 +1,5 @@
+import 'package:sakhi_yatra/core/models/vehicle_model.dart';
+
 class UserModel {
   final String id;
   final String? email;
@@ -6,6 +8,7 @@ class UserModel {
   final String? phoneNumber;
   final String? dob;
   final String? gender;
+  final VehicleModel? vehicle;
 
   UserModel({
     required this.id,
@@ -15,6 +18,7 @@ class UserModel {
     this.phoneNumber,
     this.dob,
     this.gender,
+    this.vehicle,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -30,12 +34,15 @@ class UserModel {
       phoneNumber: json['phone_number'] ?? json['phone'],
       dob: json['dob'],
       gender: json['gender'],
+      vehicle: json['vehicle'] != null
+          ? VehicleModel.fromJson(json['vehicle'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      if (id.isNotEmpty) '_id': id,
       'email': email,
       'first_name': firstName,
       'last_name': lastName,

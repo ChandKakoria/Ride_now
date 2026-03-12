@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/core/models/user_model.dart';
-import 'package:ride_now/services/user_service.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/core/models/user_model.dart';
+import 'package:sakhi_yatra/services/user_service.dart';
 
 class UserProvider extends ChangeNotifier {
   final UserService _userService = UserService();

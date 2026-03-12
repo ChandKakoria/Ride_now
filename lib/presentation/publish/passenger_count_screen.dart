@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/create_ride_provider.dart';
-import 'package:ride_now/presentation/publish/price_per_seat_screen.dart';
-import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/providers/create_ride_provider.dart';
+import 'package:sakhi_yatra/presentation/publish/price_per_seat_screen.dart';
+import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class PassengerCountScreen extends StatefulWidget {
   const PassengerCountScreen({super.key});
@@ -36,11 +37,12 @@ class _PassengerCountScreenState extends State<PassengerCountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      appBar: CommonAppBar(
+        title: const Text(
+          "Passenger Count",
+        ), // I'll add a title or leave it empty if it was empty
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF003B4D)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/models/ride_model.dart';
-import 'package:ride_now/presentation/search/ride_details_screen.dart';
-import 'package:ride_now/presentation/widgets/ride_card_components.dart';
+import 'package:sakhi_yatra/core/models/ride_model.dart';
+import 'package:sakhi_yatra/presentation/search/ride_details_screen.dart';
+import 'package:sakhi_yatra/presentation/widgets/ride_card_components.dart';
 
 class RideCard extends StatelessWidget {
   final RideModel? ride;

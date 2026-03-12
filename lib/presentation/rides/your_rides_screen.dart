@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/presentation/widgets/ride_card.dart';
-import 'package:ride_now/providers/rides_provider.dart';
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/presentation/rides/widgets/ride_list_status_view.dart';
+import 'package:sakhi_yatra/presentation/widgets/ride_card.dart';
+import 'package:sakhi_yatra/providers/rides_provider.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/presentation/rides/widgets/ride_list_status_view.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class YourRidesScreen extends StatefulWidget {
   const YourRidesScreen({super.key});
@@ -42,18 +43,9 @@ class _YourRidesScreenState extends State<YourRidesScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      appBar: CommonAppBar(
         automaticallyImplyLeading: false,
-        title: const Text(
-          "Your rides",
-          style: TextStyle(
-            color: Color(0xFF003B4D),
-            fontWeight: FontWeight.w900,
-            fontSize: 28,
-          ),
-        ),
+        title: const Text("Your rides"),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: _buildTabBar(),
@@ -66,7 +58,7 @@ class _YourRidesScreenState extends State<YourRidesScreen>
     );
   }
 
-  Widget _buildTabBar() =>  Container(
+  Widget _buildTabBar() => Container(
     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     decoration: BoxDecoration(
       color: Colors.grey[100],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class GlassTextField extends StatelessWidget {
+class GlassTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData icon;
@@ -19,6 +19,19 @@ class GlassTextField extends StatelessWidget {
   });
 
   @override
+  State<GlassTextField> createState() => _GlassTextFieldState();
+}
+
+class _GlassTextFieldState extends State<GlassTextField> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.isPassword;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -27,18 +40,31 @@ class GlassTextField extends StatelessWidget {
         border: Border.all(color: Colors.white.withOpacity(0.2)),
       ),
       child: TextFormField(
-        controller: controller,
-        obscureText: isPassword,
-        keyboardType: inputType,
+        controller: widget.controller,
+        obscureText: _obscureText,
+        keyboardType: widget.inputType,
         style: const TextStyle(
           color: Colors.white,
           decoration: TextDecoration.none,
         ),
         cursorColor: Colors.white,
-        validator: validator,
+        validator: widget.validator,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.white70),
-          hintText: hintText,
+          prefixIcon: Icon(widget.icon, color: Colors.white70),
+          suffixIcon: widget.isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white70,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                )
+              : null,
+          hintText: widget.hintText,
           hintStyle: const TextStyle(color: Colors.white60),
           border: InputBorder.none,
           focusedBorder: InputBorder.none,

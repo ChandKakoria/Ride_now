@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_now/providers/create_ride_provider.dart';
-import 'package:ride_now/services/ride_action_service.dart';
-import 'package:ride_now/core/api_response.dart';
-import 'package:ride_now/presentation/publish/widgets/price_selector.dart';
-import 'package:ride_now/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/providers/create_ride_provider.dart';
+import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:sakhi_yatra/services/ride_action_service.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
+import 'package:sakhi_yatra/presentation/publish/widgets/price_selector.dart';
+import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 
 class PricePerSeatScreen extends StatefulWidget {
   const PricePerSeatScreen({super.key});
@@ -47,6 +49,12 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
       );
       return;
     }
+
+    if (!Provider.of<ConnectivityProvider>(
+      context,
+      listen: false,
+    ).checkConnectionAndNotify(context))
+      return;
 
     setState(() => _isLoading = true);
 
@@ -98,11 +106,10 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      appBar: CommonAppBar(
+        title: const Text("Set Price"),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF003B4D)),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -122,14 +129,23 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                PriceSelector(
-                  price: _price,
-                  controller: _controller,
-                  onIncrement: () => _updatePrice(_price + 50),
-                  onDecrement: () => _updatePrice(_price - 50),
-                  onChanged: (v) =>
-                      setState(() => _price = double.tryParse(v) ?? 0.0),
-                  recommendedPrice: 350,
+                Consumer<CreateRideProvider>(
+                  builder: (context, provider, _) {
+                    final distanceKm = (provider.distanceMeters ?? 0) / 1000.0;
+                    // ₹5 per km, rounded to nearest 50
+                    int recommended = ((distanceKm * 5) / 50).round() * 50;
+                    if (recommended < 50) recommended = 50;
+
+                    return PriceSelector(
+                      price: _price,
+                      controller: _controller,
+                      onIncrement: () => _updatePrice(_price + 50),
+                      onDecrement: () => _updatePrice(_price - 50),
+                      onChanged: (v) =>
+                          setState(() => _price = double.tryParse(v) ?? 0.0),
+                      recommendedPrice: recommended,
+                    );
+                  },
                 ),
                 const Spacer(),
                 _buildPublishButton(),

@@ -15,6 +15,8 @@ class ApiConstants {
   static String get acceptRequest => "$baseUrl/rides/requests/approve";
   static String get profile => "$baseUrl/profile";
   static String get vehicles => "$baseUrl/vehicles";
+  static String get addVehicle => "$baseUrl/add-vehicle";
+  static String get removeVehicle => "$baseUrl/remove-vehicle";
   static String get changePassword => "$baseUrl/change-password";
   static String get privacy => "$baseUrl/privacy";
   static String get terms => "$baseUrl/terms";

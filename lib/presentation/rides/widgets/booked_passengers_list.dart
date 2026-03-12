@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/core/models/booking_model.dart';
+import 'package:sakhi_yatra/core/models/booking_model.dart';
 
 class BookedPassengersList extends StatelessWidget {
   final List<BookingModel> bookedUsers;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ride_now/services/ride_service.dart';
-import 'package:ride_now/core/api_response.dart';
+import 'package:sakhi_yatra/services/ride_service.dart';
+import 'package:sakhi_yatra/core/api_response.dart';
 
-import 'package:ride_now/core/models/ride_model.dart';
+import 'package:sakhi_yatra/core/models/ride_model.dart';
 
 class RideSearchProvider extends ChangeNotifier {
   final RideService _rideService = RideService();
