@@ -20,21 +20,26 @@ class RouteSelectionSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withOpacity(0.12),
+            blurRadius: 10,
+          ),
+        ],
       ),
       child: ListView(
         controller: controller,
         padding: const EdgeInsets.all(20),
         children: [
-          const Text(
+          Text(
             "What is your route?",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF003B5C),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 20),
@@ -58,8 +63,9 @@ class RouteSelectionSheet extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (c) => const RideTimePickerScreen()),
               ),
-              backgroundColor: const Color(0xFF00A3E0),
-              child: const Icon(Icons.arrow_forward, color: Colors.white),
+              child: Icon(
+                Icons.arrow_forward,
+                ),
             ),
           ),
         ],

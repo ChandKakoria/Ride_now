@@ -35,27 +35,31 @@ class _GlassTextFieldState extends State<GlassTextField> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Theme.of(context).cardColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.2),
+        ),
       ),
       child: TextFormField(
         controller: widget.controller,
         obscureText: _obscureText,
         keyboardType: widget.inputType,
-        style: const TextStyle(
-          color: Colors.white,
-          decoration: TextDecoration.none,
-        ),
-        cursorColor: Colors.white,
+        style: TextStyle(decoration: TextDecoration.none),
+        cursorColor: Theme.of(context).colorScheme.onPrimary,
         validator: widget.validator,
         decoration: InputDecoration(
-          prefixIcon: Icon(widget.icon, color: Colors.white70),
+          prefixIcon: Icon(
+            widget.icon,
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+          ),
           suffixIcon: widget.isPassword
               ? IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.white70,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onPrimary.withOpacity(0.7),
                   ),
                   onPressed: () {
                     setState(() {
@@ -65,7 +69,9 @@ class _GlassTextFieldState extends State<GlassTextField> {
                 )
               : null,
           hintText: widget.hintText,
-          hintStyle: const TextStyle(color: Colors.white60),
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
+          ),
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,

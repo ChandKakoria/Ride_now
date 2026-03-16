@@ -24,13 +24,19 @@ class RideListStatusView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 80, color: Colors.grey[isError ? 400 : 200]),
+            Icon(
+              icon,
+              size: 80,
+              color: isError
+                  ? Theme.of(context).colorScheme.error.withOpacity(0.3)
+                  : Theme.of(context).disabledColor.withOpacity(0.2),
+            ),
             const SizedBox(height: 16),
             Text(
               title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.grey[isError ? 600 : 600],
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -39,20 +45,20 @@ class RideListStatusView extends StatelessWidget {
             Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.grey),
+              style: TextStyle(color: Theme.of(context).disabledColor),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: onRetry,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00A3E0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
               child: Text(
                 isError ? "Retry" : "Refresh",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(
+                  ),
               ),
             ),
           ],

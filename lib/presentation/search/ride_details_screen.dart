@@ -44,14 +44,17 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   Widget build(BuildContext context) {
     return SharedGradientBackground(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
         appBar: _buildAppBar(),
         body: Consumer<RidesProvider>(
           builder: (context, provider, _) {
             final res = provider.rideDetailsResponse;
             final ride = res.data ?? widget.ride;
             if (res.status == Status.LOADING && res.data == null) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              );
             }
             return Stack(
               children: [
@@ -60,50 +63,77 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RideHeader(
-                        pickupTime: ride.pickupTime,
-                        status: ride.status,
-                      ),
-                      RideTimeline(
-                        pickupTime: ride.pickupTime,
-                        dropoffTime: ride.dropoffTime,
-                        pickupLocation: ride.pickupLocation,
-                        dropoffLocation: ride.dropoffLocation,
-                      ),
-                      const SizedBox(height: 16),
-                      Divider(thickness: 8, color: Colors.grey[100]),
-                      RidePassengerInfo(
-                        totalSeats: ride.passengerCount ?? 0,
-                        bookedSeats: ride.bookedSeats ?? 0,
-                        availableSeats: ride.availableSeats ?? 0,
-                        price: ride.price ?? 0.0,
-                      ),
-                      Divider(thickness: 8, color: Colors.grey[100]),
-                      RideDriverInfo(
-                        name: ride.createdByName ?? "Unknown",
-                        email: ride.createdByEmail,
-                        onTap: widget.isMyRide
-                            ? null
-                            : () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) =>
-                                      DriverDetailsScreen(ride: ride),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: RideHeader(
+                                pickupTime: ride.pickupTime,
+                                status: ride.status,
+                              ),
+                            ),
+                            Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: RideTimeline(
+                                pickupTime: ride.pickupTime,
+                                dropoffTime: ride.dropoffTime,
+                                pickupLocation: ride.pickupLocation,
+                                dropoffLocation: ride.dropoffLocation,
+                              ),
+                            ),
+                            Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: RidePassengerInfo(
+                                totalSeats: ride.passengerCount ?? 0,
+                                bookedSeats: ride.bookedSeats ?? 0,
+                                availableSeats: ride.availableSeats ?? 0,
+                                price: ride.price ?? 0.0,
+                              ),
+                            ),
+                            Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: RideDriverInfo(
+                                name: ride.createdByName ?? "Unknown",
+                                email: ride.createdByEmail,
+                                onTap: widget.isMyRide
+                                    ? null
+                                    : () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              DriverDetailsScreen(ride: ride),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                            if (ride.vehicle != null)
+                              Card(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: _buildVehicleInfo(ride.vehicle!),
+                              ),
+                            if (ride.bookedUsers.isNotEmpty)
+                              Card(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: BookedPassengersList(
+                                  bookedUsers: ride.bookedUsers,
                                 ),
                               ),
-                      ),
-                      if (ride.vehicle != null) ...[
-                        Divider(thickness: 8, color: Colors.grey[100]),
-                        _buildVehicleInfo(ride.vehicle!),
-                      ],
-                      if (ride.bookedUsers.isNotEmpty)
-                        BookedPassengersList(bookedUsers: ride.bookedUsers),
-                      if (widget.isMyRide && ride.requests.isNotEmpty)
-                        RideRequestsList(
-                          requests: ride.requests,
-                          onAccept: (id) => _handleAccept(id),
+                          ],
                         ),
-                      const SizedBox(height: 40),
+                      ),
+                      if (widget.isMyRide && ride.requests.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: RideRequestsList(
+                              requests: ride.requests,
+                              onAccept: (id) => _handleAccept(id),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -152,7 +182,6 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                 ? AppStrings.successRideBooked
                 : (p.error ?? AppStrings.errorBookingFailed),
           ),
-          backgroundColor: ok ? Colors.green : Colors.red,
         ),
       );
     }
@@ -169,7 +198,6 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                 ? AppStrings.successRequestAccepted
                 : (p.error ?? AppStrings.errorAcceptFailed),
           ),
-          backgroundColor: ok ? Colors.green : Colors.red,
         ),
       );
       if (ok) p.fetchRideDetails(widget.ride.id);
@@ -182,12 +210,12 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Vehicle Details",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF003B4D),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -197,12 +225,16 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF00A3E0).withOpacity(0.1),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Theme.of(context).primaryColor.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.directions_car,
-                  color: Color(0xFF00A3E0),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black
+                      : Theme.of(context).primaryColor,
                 ),
               ),
               const SizedBox(width: 16),
@@ -212,15 +244,18 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                   children: [
                     Text(
                       "${vehicle.name} ${vehicle.model}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF003B4D),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       "Color: ${vehicle.color}",
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).disabledColor,
+                      ),
                     ),
                   ],
                 ),

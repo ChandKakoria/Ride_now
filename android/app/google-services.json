@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182893541767",
+    "project_id": "sakhiyatra-55ff3",
+    "storage_bucket": "sakhiyatra-55ff3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182893541767:android:b3155447a70beda027bb22",
+        "android_client_info": {
+          "package_name": "com.sakhiyatra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJTagTxx-CUoXZoUxiwWcYJ5GyKfsTETU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -23,17 +23,17 @@ class RideTimeline extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildTimesColumn(),
-            _buildTimelineIndicator(),
+            _buildTimesColumn(context),
+            _buildTimelineIndicator(context),
             const SizedBox(width: 16),
-            _buildLocationsColumn(),
+            _buildLocationsColumn(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTimesColumn() {
+  Widget _buildTimesColumn(BuildContext context) {
     return SizedBox(
       width: 50,
       child: Column(
@@ -41,8 +41,8 @@ class RideTimeline extends StatelessWidget {
         children: [
           Text(
             _formatTime(pickupTime),
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -50,8 +50,8 @@ class RideTimeline extends StatelessWidget {
           const Spacer(),
           Text(
             _formatTime(dropoffTime),
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -61,29 +61,34 @@ class RideTimeline extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineIndicator() {
+  Widget _buildTimelineIndicator(BuildContext context) {
     return Column(
       children: [
-        _buildTimelineNode(),
-        Expanded(child: Container(width: 4, color: Colors.grey[300])),
-        _buildTimelineNode(),
+        _buildTimelineNode(context),
+        Expanded(
+          child: Container(
+            width: 4,
+            color: Theme.of(context).disabledColor.withOpacity(0.2),
+          ),
+        ),
+        _buildTimelineNode(context),
       ],
     );
   }
 
-  Widget _buildTimelineNode() {
+  Widget _buildTimelineNode(BuildContext context) {
     return Container(
       width: 12,
       height: 12,
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFF003B4D), width: 2),
+        color: Theme.of(context).cardColor,
+        border: Border.all(color: Theme.of(context).primaryColor, width: 2),
         shape: BoxShape.circle,
       ),
     );
   }
 
-  Widget _buildLocationsColumn() {
+  Widget _buildLocationsColumn(BuildContext context) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,8 +98,8 @@ class RideTimeline extends StatelessWidget {
             pickupLocation ?? "Pickup Location",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -103,8 +108,8 @@ class RideTimeline extends StatelessWidget {
             dropoffLocation ?? "Dropoff Location",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),

@@ -17,87 +17,86 @@ class RideRequestsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (requests.isEmpty) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 20, 16, 12),
-          child: Text(
-            AppStrings.labelRideRequests,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF003B4D),
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: requests.length,
+      separatorBuilder: (c, i) => const Divider(height: 1),
+      itemBuilder: (c, i) {
+        final r = requests[i];
+        final s = r.status?.toLowerCase() ?? "pending";
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : null,
+            child: Icon(
+              Icons.person,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black
+                  : Theme.of(context).primaryColor,
             ),
           ),
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: requests.length,
-          separatorBuilder: (c, i) => const Divider(height: 1),
-          itemBuilder: (c, i) {
-            final r = requests[i];
-            final s = r.status?.toLowerCase() ?? "pending";
-            return ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              leading: CircleAvatar(
-                backgroundColor: const Color(0xFF00A3E0).withOpacity(0.1),
-                child: const Icon(Icons.person, color: Color(0xFF00A3E0)),
-              ),
-              title: Text(
-                r.requesterName ?? "Unknown",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF003B4D),
-                ),
-              ),
-              subtitle: _buildSubtitle(r, s),
-              trailing: s == 'pending'
-                  ? _buildAcceptButton(r)
-                  : const Icon(Icons.check_circle, color: Colors.green),
-            );
-          },
-        ),
-      ],
+          title: Text(
+            r.requesterName ?? "Unknown",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          subtitle: _buildSubtitle(context, r, s),
+          trailing: s == 'pending'
+              ? _buildAcceptButton(context, r)
+              : const Icon(Icons.check_circle, color: Colors.green),
+        );
+      },
     );
   }
 
-  Widget _buildSubtitle(RideRequestModel r, String s) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (r.requesterPhone != null)
-        Text(
-          "Phone: ${r.requesterPhone}",
-          style: TextStyle(color: Colors.grey[700], fontSize: 13),
-        ),
-      if (r.requesterEmail != null)
-        Text(
-          "Email: ${r.requesterEmail}",
-          style: TextStyle(color: Colors.grey[700], fontSize: 13),
-        ),
-      const SizedBox(height: 4),
-      Text(
-        "Status: ${s.toUpperCase()}",
-        style: TextStyle(
-          color: s == 'pending' ? Colors.orange : Colors.green,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ],
-  );
+  Widget _buildSubtitle(BuildContext context, RideRequestModel r, String s) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (r.requesterPhone != null)
+            Text(
+              "Phone: ${r.requesterPhone}",
+              style: TextStyle(
+                color: Theme.of(context).disabledColor,
+                fontSize: 13,
+              ),
+            ),
+          if (r.requesterEmail != null)
+            Text(
+              "Email: ${r.requesterEmail}",
+              style: TextStyle(
+                color: Theme.of(context).disabledColor,
+                fontSize: 13,
+              ),
+            ),
+          const SizedBox(height: 4),
+          Text(
+            "Status: ${s.toUpperCase()}",
+            style: TextStyle(
+              color: s == 'pending' ? Colors.orange : Colors.green,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      );
 
-  Widget _buildAcceptButton(RideRequestModel r) => ElevatedButton(
-    onPressed: isLoading ? null : () => onAccept(r.id),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF00A3E0),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    ),
-    child: const Text(AppStrings.labelAccept),
-  );
+  Widget _buildAcceptButton(BuildContext context, RideRequestModel r) =>
+      ElevatedButton(
+        onPressed: isLoading ? null : () => onAccept(r.id),
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        child: const Text(AppStrings.labelAccept),
+      );
 }

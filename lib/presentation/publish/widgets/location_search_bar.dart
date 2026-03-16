@@ -20,11 +20,11 @@ class LocationSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F4F8),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -33,10 +33,12 @@ class LocationSearchBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new,
               size: 20,
-              color: Color(0xFF5A6A78),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             ),
             onPressed: onBack,
           ),
@@ -44,15 +46,15 @@ class LocationSearchBar extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              style: const TextStyle(
-                color: Color(0xFF003B5C),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: const TextStyle(
-                  color: Color(0xFF7D8C98),
+                hintStyle: TextStyle(
+                  color: Theme.of(context).disabledColor,
                   fontSize: 16,
                 ),
                 border: InputBorder.none,
@@ -62,7 +64,10 @@ class LocationSearchBar extends StatelessWidget {
           ),
           if (controller.text.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.close, color: Color(0xFF5A6A78)),
+              icon: Icon(
+                Icons.close,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
               onPressed: onClear,
             ),
           const SizedBox(width: 8),

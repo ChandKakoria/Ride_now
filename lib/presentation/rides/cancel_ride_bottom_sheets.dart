@@ -19,38 +19,38 @@ class CancelRideReasonBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildHeader(context),
-          Divider(height: 1, color: Colors.grey[200]),
+          Divider(height: 1, color: Theme.of(context).dividerColor),
           Flexible(
             child: ListView.separated(
               shrinkWrap: true,
               itemCount: reasons.length,
               separatorBuilder: (c, i) => Divider(
                 height: 1,
-                color: Colors.grey[200],
+                color: Theme.of(context).dividerColor,
                 indent: 16,
                 endIndent: 16,
               ),
               itemBuilder: (c, i) => ListTile(
                 title: Text(
                   reasons[i],
-                  style: const TextStyle(
-                    color: Color(0xFF003B4D),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                trailing: const Icon(
+                trailing: Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
-                  color: Colors.grey,
+                  color: Theme.of(context).disabledColor,
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -80,16 +80,16 @@ class CancelRideReasonBottomSheet extends StatelessWidget {
     child: Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF00A3E0)),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
           onPressed: () => Navigator.pop(context),
         ),
-        const Expanded(
+        Expanded(
           child: Text(
             "What's the reason?",
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF003B4D),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),

@@ -104,14 +104,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _updatePassword,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00A3E0),
-                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? CircularProgressIndicator(
+                        )
                     : const Text(
                         "Update Password",
                         style: TextStyle(
@@ -139,7 +138,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         const SizedBox(height: 8),
         TextField(
@@ -147,12 +150,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           obscureText: isPassword ? isObscured : false,
           decoration: InputDecoration(
             filled: true,
-            fillColor: const Color(0xFFF0F4F8),
+            fillColor: Theme.of(context).disabledColor.withOpacity(0.1),
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
                       isObscured ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.grey,
+                      color: Theme.of(context).disabledColor,
                     ),
                     onPressed: onToggle,
                   )

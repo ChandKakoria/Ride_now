@@ -27,15 +27,6 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: bottom,
       centerTitle: centerTitle,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF003B4D), Color(0xFF00A3E0)],
-          ),
-        ),
-      ),
     );
   }
 

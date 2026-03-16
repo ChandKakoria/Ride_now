@@ -17,7 +17,6 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -29,11 +28,18 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white.withOpacity(0.1)
+                          : Colors.transparent,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black.withOpacity(0.5)
+                            : Theme.of(context).shadowColor.withOpacity(0.08),
                         blurRadius: 30,
                         offset: const Offset(0, 15),
                       ),
@@ -61,7 +67,7 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 48),
-                          child: Divider(color: Colors.grey[200]),
+                          child: Divider(color: Theme.of(context).dividerColor),
                         ),
                         _buildInputRow(
                           icon: Icons.location_on_outlined,
@@ -124,14 +130,12 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                   );
               },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF00A3E0),
-          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
         ),
         child: provider.isLoading
-            ? const CircularProgressIndicator(color: Colors.white)
+            ? CircularProgressIndicator()
             : const Text(
                 "Search Rides",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -156,10 +160,18 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0F4F8),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Theme.of(context).primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: const Color(0xFF00A3E0), size: 22),
+              child: Icon(
+                icon,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black
+                    : Theme.of(context).primaryColor,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -172,8 +184,8 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       color: value != null && value.isNotEmpty
-                          ? const Color(0xFF003B4D)
-                          : Colors.grey[400],
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context).disabledColor,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -201,20 +213,31 @@ class _RideSearchScreenState extends State<RideSearchScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFF0F4F8),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Theme.of(context).primaryColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.calendar_today,
               size: 18,
-              color: Color(0xFF00A3E0),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black
+                  : Theme.of(context).primaryColor,
             ),
             const SizedBox(width: 12),
             Text(
               "${provider.selectedDate.day}/${provider.selectedDate.month}/${provider.selectedDate.year}",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors
+                          .black // Preserves visibility against white dark mode background
+                    : Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           ],
         ),

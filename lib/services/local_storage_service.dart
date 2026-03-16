@@ -7,6 +7,7 @@ class LocalStorageService {
   static const String _emailKey = 'user_email';
   static const String _firstNameKey = 'first_name';
   static const String _lastNameKey = 'last_name';
+  static const String _themeModeKey = 'is_dark_mode';
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -53,6 +54,14 @@ class LocalStorageService {
 
   static String? getUser() {
     return _box.get(_userKey);
+  }
+
+  static Future<void> saveThemeMode(bool isDarkMode) async {
+    await _box.put(_themeModeKey, isDarkMode);
+  }
+
+  static bool? getThemeMode() {
+    return _box.get(_themeModeKey);
   }
 
   static Future<void> clearAll() async {

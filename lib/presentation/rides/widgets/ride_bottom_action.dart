@@ -20,10 +20,10 @@ class RideBottomAction extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -32,8 +32,6 @@ class RideBottomAction extends StatelessWidget {
       child: ElevatedButton(
         onPressed: (inactive || isLoading) ? null : onBook,
         style: ElevatedButton.styleFrom(
-          backgroundColor: inactive ? Colors.grey : const Color(0xFF00A3E0),
-          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
@@ -41,11 +39,10 @@ class RideBottomAction extends StatelessWidget {
           elevation: 0,
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
-                  color: Colors.white,
                   strokeWidth: 2,
                 ),
               )

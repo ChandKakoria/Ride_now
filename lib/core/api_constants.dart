@@ -6,6 +6,7 @@ class ApiConstants {
   // Auth Endpoints
   static String get signUp => "$baseUrl/signup";
   static String get login => "$baseUrl/login";
+  static String get forgotPassword => "$baseUrl/forgot-password";
 
   // Ride Endpoints
   static String get createRide => "$baseUrl/rides";

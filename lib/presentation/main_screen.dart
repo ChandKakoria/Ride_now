@@ -33,18 +33,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      backgroundColor: Colors.transparent,
       body: SharedGradientBackground(
         child: IndexedStack(index: _currentIndex, children: _screens),
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF003B4D), Color(0xFF00A3E0)],
-          ),
-        ),
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         child: LiquidGlassBottomBar(
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -57,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
             }
             if (index == 4) context.read<UserProvider>().fetchProfile();
           },
-          activeColor: Colors.white,
+          activeColor: Theme.of(context).colorScheme.onPrimary,
           items: const [
             LiquidGlassBottomBarItem(
               icon: Icons.directions_car_outlined,

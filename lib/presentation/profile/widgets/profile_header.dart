@@ -31,7 +31,11 @@ class ProfileHeader extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(Icons.person, size: 40, color: Color(0xFF00A3E0)),
+          child: Icon(
+            Icons.person,
+            size: 40,
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -40,10 +44,10 @@ class ProfileHeader extends StatelessWidget {
             children: [
               Text(
                 "$firstName $lastName",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF003B4D),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Text(
@@ -53,7 +57,9 @@ class ProfileHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   color: vehicle != null
-                      ? const Color(0xFF00A3E0)
+                      ? (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Theme.of(context).primaryColor)
                       : Colors.grey,
                   fontWeight: FontWeight.w500,
                 ),

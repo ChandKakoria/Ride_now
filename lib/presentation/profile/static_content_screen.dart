@@ -58,7 +58,12 @@ class _StaticContentScreenState extends State<StaticContentScreen> {
                 const SizedBox(height: 16),
                 Text(
                   res.data ?? "No content available",
-                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
+                  ),
                 ),
               ],
             ),

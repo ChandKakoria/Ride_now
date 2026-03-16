@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sakhi_yatra/core/api_response.dart';
 import 'package:sakhi_yatra/providers/user_provider.dart';
+import 'package:sakhi_yatra/providers/theme_provider.dart';
 import 'package:sakhi_yatra/providers/vehicle_provider.dart';
 import 'package:sakhi_yatra/presentation/profile/widgets/profile_header.dart';
 import 'package:sakhi_yatra/presentation/profile/widgets/profile_actions.dart';
@@ -29,7 +30,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
       appBar: const CommonAppBar(title: Text("Profile")),
       body: Consumer<UserProvider>(
         builder: (context, provider, _) {
@@ -59,112 +59,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 24),
                           const SizedBox(height: 24),
-                          _buildActionItem(
-                            icon: Icons.person_outline,
-                            text: "Edit personal details",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) => const EditProfileScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          _buildActionItem(
-                            icon: Icons.directions_car_filled_outlined,
-                            text: "My Vehicles",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) => const BrandSelectionScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          if (user?.vehicle != null)
-                            _buildActionItem(
-                              icon: Icons.no_crash_outlined,
-                              text: "Remove Vehicle",
-                              onTap: () => _showRemoveVehicleDialog(context),
-                              textColor: Colors.red,
-                              iconColor: Colors.red,
+                          Card(
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Column(
+                                children: [
+                                  _buildActionItem(
+                                    icon: Icons.person_outline,
+                                    text: "Edit personal details",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              const EditProfileScreen(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  _buildActionItem(
+                                    icon: Icons.directions_car_filled_outlined,
+                                    text: "My Vehicles",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              const BrandSelectionScreen(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  if (user?.vehicle != null)
+                                    _buildActionItem(
+                                      icon: Icons.no_crash_outlined,
+                                      text: "Remove Vehicle",
+                                      onTap: () =>
+                                          _showRemoveVehicleDialog(context),
+                                      textColor: Colors.red,
+                                      iconColor: Colors.red,
+                                    ),
+                                  _buildActionItem(
+                                    icon: Icons.lock_outline,
+                                    text: "Change Password",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              const ChangePasswordScreen(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          _buildActionItem(
-                            icon: Icons.lock_outline,
-                            text: "Change Password",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) => const ChangePasswordScreen(),
-                                ),
-                              );
-                            },
                           ),
                           const SizedBox(height: 32),
-                          const Text(
+                          Text(
                             "Verify your profile",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF003B4D),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 16),
-                          ProfileVerifySection(user: user),
+                          Card(
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: ProfileVerifySection(user: user),
+                            ),
+                          ),
                           const SizedBox(height: 32),
-                          const Text(
+                          Text(
                             "More",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF003B4D),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 16),
-                          _buildActionItem(
-                            icon: Icons.description,
-                            text: "Terms & Conditions",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) => const StaticContentScreen(
-                                    title: "Terms & Conditions",
+                          Card(
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Column(
+                                children: [
+                                  _buildActionItem(
+                                    icon: Icons.description,
+                                    text: "Terms & Conditions",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              const StaticContentScreen(
+                                                title: "Terms & Conditions",
+                                              ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                          _buildActionItem(
-                            icon: Icons.privacy_tip,
-                            text: "Privacy Policy",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) => const StaticContentScreen(
-                                    title: "Privacy Policy",
+                                  _buildActionItem(
+                                    icon: Icons.privacy_tip,
+                                    text: "Privacy Policy",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              const StaticContentScreen(
+                                                title: "Privacy Policy",
+                                              ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                          _buildActionItem(
-                            icon: Icons.help_outline,
-                            text: "Help & Support",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (c) => const StaticContentScreen(
-                                    title: "Help & Support",
+                                  _buildActionItem(
+                                    icon: Icons.help_outline,
+                                    text: "Help & Support",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (c) =>
+                                              const StaticContentScreen(
+                                                title: "Help & Support",
+                                              ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ),
-                              );
-                            },
+                                  Consumer<ThemeProvider>(
+                                    builder: (context, themeProvider, _) {
+                                      return _buildActionItem(
+                                        icon: themeProvider.isDarkMode
+                                            ? Icons.light_mode
+                                            : Icons.dark_mode,
+                                        text: themeProvider.isDarkMode
+                                            ? "Light Mode"
+                                            : "Dark Mode",
+                                        onTap: () =>
+                                            themeProvider.toggleTheme(),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 32),
                           const LogoutButton(),
@@ -192,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           height: 300,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF00A3E0).withOpacity(0.08),
+            color: Theme.of(context).primaryColor.withOpacity(0.08),
           ),
         ),
       ),
@@ -204,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           height: 250,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF00A3E0).withOpacity(0.05),
+            color: Theme.of(context).primaryColor.withOpacity(0.05),
           ),
         ),
       ),
@@ -272,16 +319,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Color? iconColor,
   }) => ListTile(
     onTap: onTap,
-    leading: Icon(icon, color: iconColor ?? const Color(0xFF003B4D)),
+    leading: Icon(
+      icon,
+      color: iconColor ?? Theme.of(context).colorScheme.onSurface,
+    ),
     title: Text(
       text,
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: textColor ?? const Color(0xFF003B4D),
+        color: textColor ?? Theme.of(context).colorScheme.onSurface,
       ),
     ),
     trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-    contentPadding: EdgeInsets.zero,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
   );
 }

@@ -168,19 +168,33 @@ class _PickUpScreenState extends State<PickUpScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
       child: ListTile(
-        leading: const Icon(Icons.my_location, color: Color(0xFF00A3E0)),
-        title: const Text(
+        leading: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
+        title: Text(
           "Use Current Location",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
-        subtitle: const Text("Set pickup to your current position"),
+        subtitle: Text(
+          "Set pickup to your current position",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
+        ),
         trailing: _isLocating
-            ? const SizedBox(
+            ? SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Theme.of(context).primaryColor,
+                ),
               )
-            : const Icon(Icons.chevron_right),
+            : Icon(
+                Icons.chevron_right,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+              ),
         onTap: _isLocating ? null : _useCurrentLocation,
       ),
     );
@@ -189,7 +203,6 @@ class _PickUpScreenState extends State<PickUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       body: SharedGradientBackground(
         child: Stack(
@@ -238,8 +251,9 @@ class _PickUpScreenState extends State<PickUpScreen> {
             : ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Select a pickup location")),
               ),
-        backgroundColor: const Color(0xFF00A3E0),
-        child: const Icon(Icons.arrow_forward, color: Colors.white),
+        child: Icon(
+          Icons.arrow_forward,
+          ),
       ),
     );
   }
@@ -258,6 +272,11 @@ class _PickUpScreenState extends State<PickUpScreen> {
         )
       : Container(
           color: Colors.transparent,
-          child: const Center(child: Text("Search location to view on map")),
+          child: Center(
+            child: Text(
+              "Search location to view on map",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
+          ),
         );
 }

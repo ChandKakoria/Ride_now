@@ -85,8 +85,7 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Ride Published Successfully!'),
-            backgroundColor: Colors.green,
-          ),
+            ),
         );
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
@@ -95,8 +94,7 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(response.message ?? 'Failed to publish ride'),
-            backgroundColor: Colors.red,
-          ),
+            ),
         );
       }
     }
@@ -105,7 +103,6 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: CommonAppBar(
         title: const Text("Set Price"),
         leading: IconButton(
@@ -116,41 +113,59 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
       body: SharedGradientBackground(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Set your price per seat",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF003B4D),
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: Theme.of(context).brightness == Brightness.light
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Set your price per seat",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-                Consumer<CreateRideProvider>(
-                  builder: (context, provider, _) {
-                    final distanceKm = (provider.distanceMeters ?? 0) / 1000.0;
-                    // ₹5 per km, rounded to nearest 50
-                    int recommended = ((distanceKm * 5) / 50).round() * 50;
-                    if (recommended < 50) recommended = 50;
+                  const SizedBox(height: 40),
+                  Consumer<CreateRideProvider>(
+                    builder: (context, provider, _) {
+                      final distanceKm =
+                          (provider.distanceMeters ?? 0) / 1000.0;
+                      // ₹5 per km, rounded to nearest 50
+                      int recommended = ((distanceKm * 5) / 50).round() * 50;
+                      if (recommended < 50) recommended = 50;
 
-                    return PriceSelector(
-                      price: _price,
-                      controller: _controller,
-                      onIncrement: () => _updatePrice(_price + 50),
-                      onDecrement: () => _updatePrice(_price - 50),
-                      onChanged: (v) =>
-                          setState(() => _price = double.tryParse(v) ?? 0.0),
-                      recommendedPrice: recommended,
-                    );
-                  },
-                ),
-                const Spacer(),
-                _buildPublishButton(),
-                const SizedBox(height: 20),
-              ],
+                      return PriceSelector(
+                        price: _price,
+                        controller: _controller,
+                        onIncrement: () => _updatePrice(_price + 50),
+                        onDecrement: () => _updatePrice(_price - 50),
+                        onChanged: (v) =>
+                            setState(() => _price = double.tryParse(v) ?? 0.0),
+                        recommendedPrice: recommended,
+                      );
+                    },
+                  ),
+                  const Spacer(),
+                  _buildPublishButton(),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),
@@ -165,20 +180,19 @@ class _PricePerSeatScreenState extends State<PricePerSeatScreen> {
       child: ElevatedButton(
         onPressed: _isLoading ? null : _publishRide,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF00A3E0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
         ),
         child: _isLoading
-            ? const CircularProgressIndicator(color: Colors.white)
-            : const Text(
+            ? CircularProgressIndicator(
+                )
+            : Text(
                 "Publish Ride",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+                  ),
               ),
       ),
     );

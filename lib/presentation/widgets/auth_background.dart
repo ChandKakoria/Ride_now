@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 
 class AuthBackground extends StatelessWidget {
   final Widget child;
@@ -11,16 +10,7 @@ class AuthBackground extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF003B4D), // Deep Navy
-                  Color(0xFF00A3E0), // Sky Blue
-                ],
-              ),
-            ),
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
           ),
           ..._buildCircles(),
           Center(

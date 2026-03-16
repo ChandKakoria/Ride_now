@@ -23,11 +23,11 @@ class PriceSelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -39,12 +39,14 @@ class PriceSelector extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildPriceButton(
+                context: context,
                 icon: Icons.remove,
                 onTap: onDecrement,
                 enabled: price > 0,
               ),
-              _buildInputArea(),
+              _buildInputArea(context),
               _buildPriceButton(
+                context: context,
                 icon: Icons.add,
                 onTap: onIncrement,
                 enabled: true,
@@ -54,23 +56,26 @@ class PriceSelector extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             "Recommended: ₹$recommendedPrice - ₹${recommendedPrice + 100}",
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).disabledColor,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "₹",
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF003B5C),
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         SizedBox(
@@ -79,10 +84,10 @@ class PriceSelector extends StatelessWidget {
             controller: controller,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 60,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF003B5C),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -96,6 +101,7 @@ class PriceSelector extends StatelessWidget {
   }
 
   Widget _buildPriceButton({
+    required BuildContext context,
     required IconData icon,
     required VoidCallback onTap,
     required bool enabled,
@@ -106,12 +112,16 @@ class PriceSelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: enabled ? const Color(0xFFF0F4F8) : Colors.grey[100],
+          color: enabled
+              ? Theme.of(context).primaryColor.withOpacity(0.1)
+              : Theme.of(context).disabledColor.withOpacity(0.1),
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
-          color: enabled ? const Color(0xFF003B5C) : Colors.grey[400],
+          color: enabled
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).disabledColor,
           size: 32,
         ),
       ),

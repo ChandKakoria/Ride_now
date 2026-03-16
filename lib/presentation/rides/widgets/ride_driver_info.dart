@@ -15,10 +15,18 @@ class RideDriverInfo extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 28,
-              backgroundColor: Color(0xFFE0F7FA),
-              child: Icon(Icons.person, color: Colors.grey, size: 30),
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : null,
+              child: Icon(
+                Icons.person,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black
+                    : Theme.of(context).primaryColor,
+                size: 30,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -27,8 +35,8 @@ class RideDriverInfo extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
-                      color: Color(0xFF003B4D),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -36,15 +44,21 @@ class RideDriverInfo extends StatelessWidget {
                   if (email != null)
                     Text(
                       email!,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                      style: TextStyle(
+                        color: Theme.of(context).disabledColor,
+                        fontSize: 13,
+                      ),
                     ),
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.star, color: Colors.grey, size: 16),
-                      SizedBox(width: 4),
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
                       Text(
                         "4.5/5 - 12 ratings",
-                        style: TextStyle(color: Colors.grey, fontSize: 13),
+                        style: TextStyle(
+                          color: Theme.of(context).disabledColor,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
@@ -52,7 +66,11 @@ class RideDriverInfo extends StatelessWidget {
               ),
             ),
             if (onTap != null)
-              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Theme.of(context).disabledColor,
+              ),
           ],
         ),
       ),

@@ -7,7 +7,6 @@ class InboxScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: const CommonAppBar(title: Text("Inbox")),
       body: Center(
         child: Column(

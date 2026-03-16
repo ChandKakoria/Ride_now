@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:sakhi_yatra/presentation/main_screen.dart';
 import 'package:sakhi_yatra/presentation/login/signup_screen.dart';
+import 'package:sakhi_yatra/presentation/login/forgot_password_screen.dart';
 import 'package:sakhi_yatra/services/auth_service.dart';
 import 'package:sakhi_yatra/core/api_response.dart';
 import 'package:sakhi_yatra/presentation/widgets/glass_text_field.dart';
@@ -41,12 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (c) => const MainScreen()),
       );
     else if (mounted)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(res.message ?? "Login Failed"),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.message ?? "Login Failed")));
   }
 
   @override
@@ -60,10 +58,10 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             constraints: const BoxConstraints(maxWidth: 500),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Theme.of(context).cardColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Theme.of(context).dividerColor.withOpacity(0.2),
                 width: 1.5,
               ),
             ),
@@ -72,18 +70,19 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     AppStrings.welcomeBack,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     AppStrings.signInToContinue,
-                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onPrimary.withOpacity(0.7),
+                    ),
                   ),
                   const SizedBox(height: 48),
                   GlassTextField(
@@ -108,12 +107,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   _buildButton(),
                   const SizedBox(height: 24),
                   TextButton(
-                    onPressed: () {},
-                    child: const Text(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (c) => const ForgotPasswordScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
                       AppStrings.forgotPassword,
                       style: TextStyle(
-                        color: Colors.white,
                         fontWeight: FontWeight.w600,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     ),
                   ),
@@ -123,11 +131,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       context,
                       MaterialPageRoute(builder: (c) => const SignUpScreen()),
                     ),
-                    child: const Text(
+                    child: Text(
                       AppStrings.noAccount,
                       style: TextStyle(
-                        color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     ),
                   ),
@@ -146,12 +156,16 @@ class _LoginScreenState extends State<LoginScreen> {
     child: ElevatedButton(
       onPressed: _isLoading ? null : _login,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF003B4D),
+        backgroundColor: Theme.of(context).brightness == Brightness.light
+            ? Colors.white
+            : null,
+        foregroundColor: Theme.of(context).brightness == Brightness.light
+            ? Colors.black
+            : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: _isLoading
-          ? const CircularProgressIndicator()
+          ? CircularProgressIndicator(color: Theme.of(context).primaryColor)
           : const Text(
               AppStrings.signIn,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

@@ -26,22 +26,25 @@ class RidePassengerInfo extends StatelessWidget {
             children: [
               Text(
                 "$totalSeats seats total",
-                style: const TextStyle(
-                  color: Color(0xFF003B4D),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 "$bookedSeats booked, $availableSeats available",
-                style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                style: TextStyle(
+                  color: Theme.of(context).disabledColor,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
           Text(
             "\u20B9 ${price.toStringAsFixed(2)}",
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),

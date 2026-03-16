@@ -14,7 +14,6 @@ class AllRidesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: _buildAppBar(context),
       body: SharedGradientBackground(
         child: Consumer<RideSearchProvider>(
@@ -32,7 +31,7 @@ class AllRidesScreen extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDateHeader(provider.selectedDate),
+                _buildDateHeader(context, provider.selectedDate),
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(
@@ -70,7 +69,10 @@ class AllRidesScreen extends StatelessWidget {
           Text("${_getShortName(source)} \u2192 ${_getShortName(destination)}"),
           Text(
             "${DateFormat('EEE, d MMM').format(provider.selectedDate)}, ${provider.passengerCount} passenger",
-            style: const TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+              fontSize: 13,
+            ),
           ),
         ],
       ),
@@ -78,10 +80,10 @@ class AllRidesScreen extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {},
-          child: const Text(
+          child: Text(
             "Filter",
             style: TextStyle(
-              color: Color(0xFF00A3E0),
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
@@ -90,7 +92,7 @@ class AllRidesScreen extends StatelessWidget {
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(color: Colors.grey[200], height: 1),
+        child: Container(color: Theme.of(context).dividerColor, height: 1),
       ),
     );
   }
@@ -98,7 +100,7 @@ class AllRidesScreen extends StatelessWidget {
   String _getShortName(String f) =>
       f.contains(',') ? f.split(',').first.trim() : f;
 
-  Widget _buildDateHeader(DateTime date) {
+  Widget _buildDateHeader(BuildContext context, DateTime date) {
     final now = DateTime.now();
     final dateStr =
         (date.day == now.day &&
@@ -110,8 +112,8 @@ class AllRidesScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: Text(
         dateStr,
-        style: const TextStyle(
-          color: Color(0xFF003B4D),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: 22,
           fontWeight: FontWeight.bold,
         ),

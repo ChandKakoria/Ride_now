@@ -21,35 +21,40 @@ class DriverDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: const CommonAppBar(title: Text("Driver Details")),
       body: SharedGradientBackground(
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const CircleAvatar(
+            CircleAvatar(
               radius: 50,
-              backgroundColor: Color(0xFFE0F7FA),
-              child: Icon(Icons.person, color: Colors.grey, size: 60),
+              child: Icon(
+                Icons.person,
+                color: Theme.of(context).primaryColor,
+                size: 60,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
               ride.createdByName ?? "Jane Smith",
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF003B4D),
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.star, color: Colors.amber, size: 20),
-                SizedBox(width: 4),
+                const Icon(Icons.star, color: Colors.amber, size: 20),
+                const SizedBox(width: 4),
                 Text(
                   "4.8 (124 ratings)",
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).disabledColor,
+                  ),
                 ),
               ],
             ),
@@ -81,16 +86,14 @@ class DriverDetailsScreen extends StatelessWidget {
                     }
                   },
                   icon: const Icon(Icons.call, color: Colors.white),
-                  label: const Text(
+                  label: Text(
                     "Call Driver",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                      ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00A3E0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -115,11 +118,11 @@ class DriverDetailsScreen extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -130,10 +133,10 @@ class DriverDetailsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF00A3E0).withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: const Color(0xFF00A3E0), size: 24),
+            child: Icon(icon, color: Theme.of(context).primaryColor, size: 24),
           ),
           const SizedBox(width: 16),
           Column(
@@ -141,14 +144,17 @@ class DriverDetailsScreen extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).disabledColor,
+                ),
               ),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF003B4D),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],

@@ -32,10 +32,10 @@ class _RideTimePickerScreenState extends State<RideTimePickerScreen> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (c, ch) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFF00A3E0),
-            onPrimary: Colors.white,
-            onSurface: Color(0xFF003B4D),
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: Theme.of(context).primaryColor,
+            onPrimary: Theme.of(context).colorScheme.onPrimary,
+            onSurface: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         child: ch!,
@@ -50,10 +50,10 @@ class _RideTimePickerScreenState extends State<RideTimePickerScreen> {
       initialTime: _selectedTime,
       builder: (c, ch) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFF00A3E0),
-            onPrimary: Colors.white,
-            onSurface: Color(0xFF003B4D),
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: Theme.of(context).primaryColor,
+            onPrimary: Theme.of(context).colorScheme.onPrimary,
+            onSurface: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         child: ch!,
@@ -65,7 +65,6 @@ class _RideTimePickerScreenState extends State<RideTimePickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: CommonAppBar(
         title: const Text("Select Time"),
         leading: IconButton(
@@ -76,69 +75,84 @@ class _RideTimePickerScreenState extends State<RideTimePickerScreen> {
       body: SharedGradientBackground(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "When are you picking up?",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF003B4D),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                SelectionTile(
-                  title: "Date",
-                  value:
-                      "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}",
-                  icon: Icons.calendar_today,
-                  onTap: _pickDate,
-                ),
-                const SizedBox(height: 20),
-                SelectionTile(
-                  title: "Time",
-                  value: _selectedTime.format(context),
-                  icon: Icons.access_time,
-                  onTap: _pickTime,
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.read<CreateRideProvider>().updateDate(
-                        _selectedDate,
-                      );
-                      context.read<CreateRideProvider>().updateTime(
-                        _selectedTime,
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (c) => const PassengerCountScreen(),
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: Theme.of(context).brightness == Brightness.light
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00A3E0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                      ]
+                    : [],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "When are you picking up?",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
-                    child: const Text(
-                      "Next",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                  ),
+                  const SizedBox(height: 40),
+                  SelectionTile(
+                    title: "Date",
+                    value:
+                        "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}",
+                    icon: Icons.calendar_today,
+                    onTap: _pickDate,
+                  ),
+                  const SizedBox(height: 20),
+                  SelectionTile(
+                    title: "Time",
+                    value: _selectedTime.format(context),
+                    icon: Icons.access_time,
+                    onTap: _pickTime,
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.read<CreateRideProvider>().updateDate(
+                          _selectedDate,
+                        );
+                        context.read<CreateRideProvider>().updateTime(
+                          _selectedTime,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (c) => const PassengerCountScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: Text(
+                        "Next",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

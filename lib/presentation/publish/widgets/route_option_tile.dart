@@ -28,8 +28,14 @@ class RouteOptionTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFF0F4F8) : Colors.transparent,
-          border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+          color: isSelected
+              ? (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.1)
+                    : Theme.of(context).primaryColor.withOpacity(0.1))
+              : Colors.transparent,
+          border: Border(
+            bottom: BorderSide(color: Theme.of(context).dividerColor),
+          ),
         ),
         child: Row(
           children: [
@@ -37,7 +43,9 @@ class RouteOptionTile extends StatelessWidget {
               value: index,
               groupValue: selectedIndex,
               onChanged: (v) => onTap(index),
-              activeColor: const Color(0xFF00A3E0),
+              activeColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Theme.of(context).primaryColor,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -46,9 +54,9 @@ class RouteOptionTile extends StatelessWidget {
                 children: [
                   RichText(
                     text: TextSpan(
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF003B5C),
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                       children: [
@@ -70,7 +78,12 @@ class RouteOptionTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     "$distance - $via",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
+                    ),
                   ),
                 ],
               ),

@@ -1,4 +1,4 @@
-package com.example.ride_now
+package com.sakhiyatra
 
 import io.flutter.embedding.android.FlutterActivity
 

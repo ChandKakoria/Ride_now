@@ -8,17 +8,20 @@ class SearchHeader extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          height: MediaQuery.of(context).size.height * 0.40,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF003B4D), Color(0xFF00A3E0)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.only(
+          height: MediaQuery.of(context).size.height * 0.35,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(40),
               bottomRight: Radius.circular(40),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
         ),
         SafeArea(
@@ -28,12 +31,11 @@ class SearchHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 30),
-                const Text(
+                Text(
                   "Where to\nnext?",
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
                     height: 1.1,
                   ),
                 ),

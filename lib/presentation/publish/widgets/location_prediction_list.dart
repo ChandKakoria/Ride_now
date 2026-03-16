@@ -14,15 +14,20 @@ class LocationPredictionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(maxHeight: 250),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.black12)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: ListView.separated(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: predictions.length,
-        separatorBuilder: (context, index) =>
-            const Divider(height: 1, indent: 16, endIndent: 16),
+        separatorBuilder: (context, index) => Divider(
+          height: 1,
+          indent: 16,
+          endIndent: 16,
+          color: Theme.of(context).dividerColor,
+        ),
         itemBuilder: (context, index) {
           final prediction = predictions[index];
           final mainText =
@@ -32,20 +37,23 @@ class LocationPredictionList extends StatelessWidget {
               prediction['structured_formatting']['secondary_text'] ?? "";
 
           return ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.location_on_outlined,
-              color: Color(0xFF7D8C98),
+              color: Theme.of(context).disabledColor,
             ),
             title: Text(
               mainText,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF003B5C),
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             subtitle: Text(
               secondaryText,
-              style: const TextStyle(color: Color(0xFF7D8C98), fontSize: 13),
+              style: TextStyle(
+                color: Theme.of(context).disabledColor,
+                fontSize: 13,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

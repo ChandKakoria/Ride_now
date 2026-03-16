@@ -63,7 +63,6 @@ class ConnectivityProvider with ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No Internet Connection'),
-          backgroundColor: Colors.red,
           duration: Duration(seconds: 2),
         ),
       );

@@ -43,6 +43,7 @@ class AuthService {
     final String url = ApiConstants.signUp;
     final Map<String, dynamic> userData = user.toJson();
     userData['password'] = password;
+    print("Signup Payload: ${jsonEncode(userData)}");
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -60,6 +61,24 @@ class AuthService {
             await LocalStorageService.saveUser(jsonEncode(res['user']));
         }
         return res;
+      });
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> forgotPassword(String email) async {
+    final String url = ApiConstants.forgotPassword;
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+      return ApiUtils.handleResponse<Map<String, dynamic>>(response, (
+        data,
+      ) async {
+        return data as Map<String, dynamic>;
       });
     } catch (e) {
       return ApiResponse.error(e.toString());

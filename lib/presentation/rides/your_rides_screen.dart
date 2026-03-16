@@ -42,7 +42,6 @@ class _YourRidesScreenState extends State<YourRidesScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: CommonAppBar(
         automaticallyImplyLeading: false,
         title: const Text("Your rides"),
@@ -61,26 +60,29 @@ class _YourRidesScreenState extends State<YourRidesScreen>
   Widget _buildTabBar() => Container(
     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     decoration: BoxDecoration(
-      color: Colors.grey[100],
+      color: Theme.of(context).disabledColor.withOpacity(0.1),
       borderRadius: BorderRadius.circular(16),
     ),
     child: TabBar(
       controller: _tabController,
       padding: const EdgeInsets.all(4),
+      dividerColor: Colors.transparent,
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      labelColor: const Color(0xFF003B4D),
-      unselectedLabelColor: Colors.grey[600],
+      labelColor: Theme.of(context).colorScheme.onSurface,
+      unselectedLabelColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Theme.of(context).disabledColor,
       labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       tabs: const [
         Tab(text: "My Rides"),
@@ -93,7 +95,11 @@ class _YourRidesScreenState extends State<YourRidesScreen>
     builder: (context, provider, _) {
       final res = isMyRides ? provider.myRides : provider.bookedRides;
       if (res.status == Status.LOADING)
-        return const Center(child: CircularProgressIndicator());
+        return Center(
+          child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor,
+          ),
+        );
       if (res.status == Status.ERROR)
         return RideListStatusView(
           title: "Error",

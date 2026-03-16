@@ -76,24 +76,25 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF00A3E0).withOpacity(0.1),
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.directions_car,
-                      color: Color(0xFF00A3E0),
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   title: Text(
                     "${vehicle.name} ${vehicle.model}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   subtitle: Text(
                     "Color: ${vehicle.color}",
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Theme.of(context).disabledColor),
                   ),
                 ),
               );
@@ -103,8 +104,7 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToAdd(context),
-        backgroundColor: const Color(0xFF00A3E0),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, ),
       ),
     );
   }

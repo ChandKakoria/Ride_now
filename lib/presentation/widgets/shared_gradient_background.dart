@@ -7,15 +7,20 @@ class SharedGradientBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFE0F2F1), // Very Light Teal/Blue
-            Colors.white,
-          ],
-        ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : null,
+        gradient: Theme.of(context).brightness == Brightness.dark
+            ? null
+            : LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  const Color(0xFFFCE4EC), // Solid light pink
+                  Theme.of(context).scaffoldBackgroundColor,
+                ],
+              ),
       ),
       child: child,
     );

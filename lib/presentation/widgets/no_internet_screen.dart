@@ -10,13 +10,7 @@ class NoInternetScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF00A3E0), Color(0xFF005691)],
-          ),
-        ),
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -45,8 +39,6 @@ class NoInternetScreen extends StatelessWidget {
                 context.read<ConnectivityProvider>().checkConnection();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF00A3E0),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 50,
                   vertical: 15,

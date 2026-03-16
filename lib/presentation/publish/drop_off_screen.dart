@@ -115,7 +115,6 @@ class _DropOffScreenState extends State<DropOffScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       body: SharedGradientBackground(
         child: Stack(
@@ -162,8 +161,9 @@ class _DropOffScreenState extends State<DropOffScreen> {
             : ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Select a drop-off location")),
               ),
-        backgroundColor: const Color(0xFF00A3E0),
-        child: const Icon(Icons.arrow_forward, color: Colors.white),
+        child: Icon(
+          Icons.arrow_forward,
+          ),
       ),
     );
   }
@@ -182,6 +182,11 @@ class _DropOffScreenState extends State<DropOffScreen> {
         )
       : Container(
           color: Colors.transparent,
-          child: const Center(child: Text("Search location to view on map")),
+          child: Center(
+            child: Text(
+              "Search location to view on map",
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
+          ),
         );
 }

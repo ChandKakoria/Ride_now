@@ -18,25 +18,25 @@ class RideCardRouteInfo extends StatelessWidget {
             children: [
               Text(
                 _formatTime(ride.pickupTime),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF003B4D),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 30),
               Text(
                 _formatTime(ride.dropoffTime),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF003B4D),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
           ),
           const SizedBox(width: 16),
-          _buildVisualRoute(),
+          _buildVisualRoute(context),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -46,10 +46,10 @@ class RideCardRouteInfo extends StatelessWidget {
                   ride.pickupLocation ?? "Pickup",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF003B4D),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 35),
@@ -57,10 +57,10 @@ class RideCardRouteInfo extends StatelessWidget {
                   ride.dropoffLocation ?? "Dropoff",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF003B4D),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -71,10 +71,10 @@ class RideCardRouteInfo extends StatelessWidget {
             children: [
               Text(
                 "\u20B9${(ride.price ?? 0).toStringAsFixed(0)}",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: Color(0xFF003B4D),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 4),
@@ -100,27 +100,27 @@ class RideCardRouteInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildVisualRoute() => Column(
+  Widget _buildVisualRoute(BuildContext context) => Column(
     children: [
       Container(
         width: 12,
         height: 12,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF0072FF), width: 2),
+          border: Border.all(color: Theme.of(context).primaryColor, width: 2),
         ),
       ),
       Container(
         width: 2,
         height: 40,
-        color: const Color(0xFF0072FF).withOpacity(0.3),
+        color: Theme.of(context).primaryColor.withOpacity(0.3),
       ),
       Container(
         width: 12,
         height: 12,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFF0072FF),
+          color: Theme.of(context).primaryColor,
         ),
       ),
     ],
@@ -148,8 +148,16 @@ class RideCardUserInfo extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 18,
-            backgroundColor: const Color(0xFF0072FF).withOpacity(0.1),
-            child: const Icon(Icons.person, color: Color(0xFF0072FF), size: 20),
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : null,
+            child: Icon(
+              Icons.person,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black
+                  : Theme.of(context).primaryColor,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Column(
@@ -157,20 +165,27 @@ class RideCardUserInfo extends StatelessWidget {
             children: [
               Text(
                 ride.createdByName ?? "Unknown",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF003B4D),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Text(
                 "${ride.availableSeats ?? ride.passengerCount ?? 0} seats available",
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).disabledColor,
+                ),
               ),
             ],
           ),
           const Spacer(),
-          const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 14,
+            color: Theme.of(context).disabledColor,
+          ),
         ],
       ),
     );

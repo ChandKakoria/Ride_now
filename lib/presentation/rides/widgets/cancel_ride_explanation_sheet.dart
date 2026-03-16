@@ -25,9 +25,9 @@ class _CancelRideExplanationSheetState
       ),
       child: Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,18 +36,21 @@ class _CancelRideExplanationSheetState
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Color(0xFF00A3E0)),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).primaryColor,
+                  ),
                   onPressed: () => Navigator.pop(context),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
                 const SizedBox(width: 16),
-                const Text(
+                Text(
                   "Can you explain more?",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF003B4D),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -57,7 +60,7 @@ class _CancelRideExplanationSheetState
               "Reason: ${widget.reason}",
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[600],
+                color: Theme.of(context).disabledColor,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -68,7 +71,7 @@ class _CancelRideExplanationSheetState
               decoration: InputDecoration(
                 hintText: "Tell us more details...",
                 filled: true,
-                fillColor: const Color(0xFFF5F7FA),
+                fillColor: Theme.of(context).disabledColor.withOpacity(0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -92,15 +95,12 @@ class _CancelRideExplanationSheetState
       onPressed: () {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Ride cancelled successfully"),
-            backgroundColor: Color(0xFF00A3E0),
-          ),
+          SnackBar(
+            content: const Text("Ride cancelled successfully"),
+            ),
         );
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF00A3E0),
-        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
       child: const Text(

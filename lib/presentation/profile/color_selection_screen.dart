@@ -86,7 +86,6 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
                       vertical: 8,
                     ),
                     secondary: CircleAvatar(
-                      backgroundColor: _getColorFromName(colorName),
                       radius: 12,
                       child: Container(
                         decoration: BoxDecoration(
@@ -99,9 +98,10 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
                     ),
                     title: Text(
                       colorName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     value: isSelected,
@@ -114,7 +114,7 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
                         }
                       });
                     },
-                    activeColor: const Color(0xFF00A3E0),
+                    activeColor: Theme.of(context).primaryColor,
                     checkboxShape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -131,15 +131,14 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _addVehicle,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00A3E0),
-                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                   elevation: 4,
                 ),
                 child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? CircularProgressIndicator(
+                        )
                     : const Text(
                         "Add this vehicle",
                         style: TextStyle(

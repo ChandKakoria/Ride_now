@@ -83,8 +83,8 @@ class _RouteSelectionScreenState extends State<RouteSelectionScreen> {
               e.value['polyline']['encodedPolyline'],
             ),
             color: e.key == _selectedRouteIndex
-                ? const Color(0xFF00A3E0)
-                : Colors.grey,
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).disabledColor,
             width: e.key == _selectedRouteIndex ? 5 : 3,
             zIndex: e.key == _selectedRouteIndex ? 1 : 0,
             onTap: () => _updateProvider(e.key),
@@ -111,7 +111,6 @@ class _RouteSelectionScreenState extends State<RouteSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: SharedGradientBackground(
         child: Stack(
           children: [
@@ -130,16 +129,22 @@ class _RouteSelectionScreenState extends State<RouteSelectionScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: CircleAvatar(
-                  backgroundColor: Colors.white,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
               ),
             ),
             if (_isLoading)
-              const Center(child: CircularProgressIndicator())
+              Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
             else if (_routes.isNotEmpty)
               DraggableScrollableSheet(
                 initialChildSize: 0.4,
@@ -166,15 +171,20 @@ class _RouteSelectionScreenState extends State<RouteSelectionScreen> {
     right: 0,
     child: Container(
       padding: const EdgeInsets.all(20),
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.error_outline, size: 48, color: Colors.red),
-          const Text("Unable to fetch routes"),
+          Text(
+            "Unable to fetch routes",
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _fetchDirections,
+            style: ElevatedButton.styleFrom(
+              ),
             child: const Text("Retry"),
           ),
         ],

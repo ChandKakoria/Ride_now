@@ -101,11 +101,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF003B4D),
         elevation: 0,
       ),
       body: SharedGradientBackground(
@@ -117,14 +114,19 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 controller: _controller,
                 autofocus: true,
                 onChanged: _onSearch,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 16,
+                ),
                 decoration: InputDecoration(
                   hintText: widget.hintText,
-                  prefixIcon: const Icon(
+                  hintStyle: TextStyle(color: Theme.of(context).disabledColor),
+                  prefixIcon: Icon(
                     Icons.search,
-                    color: Color(0xFF00A3E0),
+                    color: Theme.of(context).primaryColor,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -142,20 +144,37 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
               ),
             ),
             if (_controller.text.isEmpty)
-              ListTile(
-                leading: const Icon(
-                  Icons.my_location,
-                  color: Color(0xFF00A3E0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.my_location,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: Text(
+                      "Use Current Location",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    trailing: _isLocating
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          )
+                        : Icon(
+                            Icons.chevron_right,
+                            color: Theme.of(context).disabledColor,
+                          ),
+                    onTap: _isLocating ? null : _useCurrentLocation,
+                  ),
                 ),
-                title: const Text("Use Current Location"),
-                trailing: _isLocating
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.chevron_right),
-                onTap: _isLocating ? null : _useCurrentLocation,
               ),
             if (_isLoading)
               const Center(
@@ -165,19 +184,40 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                 ),
               ),
             Expanded(
-              child: ListView.builder(
-                itemCount: _predictions.length,
-                itemBuilder: (context, index) {
-                  final p = _predictions[index];
-                  return ListTile(
-                    leading: const Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.grey,
-                    ),
-                    title: Text(p['description'] ?? ""),
-                    onTap: () => Navigator.pop(context, p['description']),
-                  );
-                },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: Theme.of(context).brightness == Brightness.light
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                      : [],
+                ),
+                child: ListView.builder(
+                  itemCount: _predictions.length,
+                  itemBuilder: (context, index) {
+                    final p = _predictions[index];
+                    return ListTile(
+                      leading: Icon(
+                        Icons.location_on_outlined,
+                        color: Theme.of(context).disabledColor,
+                      ),
+                      title: Text(
+                        p['description'] ?? "",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      onTap: () => Navigator.pop(context, p['description']),
+                    );
+                  },
+                ),
               ),
             ),
           ],

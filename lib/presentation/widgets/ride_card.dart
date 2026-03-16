@@ -11,7 +11,7 @@ class RideCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (ride == null) return const SizedBox.shrink();
-    final statusColor = _getStatusColor(ride!.status);
+    final statusColor = _getStatusColor(context, ride!.status);
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -22,11 +22,16 @@ class RideCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.08)
+                : Colors.transparent,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Theme.of(context).shadowColor.withOpacity(0.04),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -35,7 +40,7 @@ class RideCard extends StatelessWidget {
         child: Column(
           children: [
             RideCardRouteInfo(ride: ride!, color: statusColor),
-            const Divider(height: 1),
+            Divider(height: 1, color: Theme.of(context).dividerColor),
             RideCardUserInfo(ride: ride!),
           ],
         ),
@@ -43,10 +48,10 @@ class RideCard extends StatelessWidget {
     );
   }
 
-  Color _getStatusColor(String? s) {
+  Color _getStatusColor(BuildContext context, String? s) {
     final str = s?.toLowerCase() ?? "open";
-    if (str == 'booked') return const Color(0xFF4CAF50);
-    if (str == 'requested') return const Color(0xFFFFC107);
-    return const Color(0xFF00A3E0);
+    if (str == 'booked') return Colors.green;
+    if (str == 'requested') return Colors.orange;
+    return Theme.of(context).primaryColor;
   }
 }

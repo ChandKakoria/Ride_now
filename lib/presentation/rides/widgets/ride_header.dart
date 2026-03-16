@@ -12,13 +12,13 @@ class RideHeader extends StatelessWidget {
     final date = _parseDate(pickupTime);
     final statusStr = status?.toLowerCase() ?? "open";
 
-    Color statusColor;
+    final Color statusColor;
     if (statusStr == 'booked') {
-      statusColor = const Color(0xFF4CAF50);
+      statusColor = Colors.green;
     } else if (statusStr == 'requested') {
-      statusColor = const Color(0xFFFFC107);
+      statusColor = Colors.orange;
     } else {
-      statusColor = const Color(0xFF00A3E0);
+      statusColor = Theme.of(context).primaryColor;
     }
 
     return Padding(
@@ -28,8 +28,8 @@ class RideHeader extends StatelessWidget {
         children: [
           Text(
             date,
-            style: const TextStyle(
-              color: Color(0xFF003B4D),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
