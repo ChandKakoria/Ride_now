@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:sakhi_yatra/core/api_response.dart';
 import 'package:sakhi_yatra/providers/user_provider.dart';
@@ -8,9 +9,10 @@ import 'package:sakhi_yatra/presentation/profile/widgets/profile_header.dart';
 import 'package:sakhi_yatra/presentation/profile/widgets/profile_actions.dart';
 import 'package:sakhi_yatra/presentation/profile/change_password_screen.dart';
 import 'package:sakhi_yatra/presentation/profile/edit_profile_screen.dart';
-import 'package:sakhi_yatra/presentation/profile/static_content_screen.dart';
 import 'package:sakhi_yatra/presentation/profile/brand_selection_screen.dart';
+import 'package:sakhi_yatra/presentation/profile/help_support_screen.dart';
 import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:sakhi_yatra/core/api_constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -153,32 +155,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   _buildActionItem(
                                     icon: Icons.description,
                                     text: "Terms & Conditions",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (c) =>
-                                              const StaticContentScreen(
-                                                title: "Terms & Conditions",
-                                              ),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => launchUrl(
+                                      Uri.parse(ApiConstants.terms),
+                                      mode: LaunchMode.externalApplication,
+                                    ),
                                   ),
                                   _buildActionItem(
                                     icon: Icons.privacy_tip,
                                     text: "Privacy Policy",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (c) =>
-                                              const StaticContentScreen(
-                                                title: "Privacy Policy",
-                                              ),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => launchUrl(
+                                      Uri.parse(ApiConstants.privacy),
+                                      mode: LaunchMode.externalApplication,
+                                    ),
                                   ),
                                   _buildActionItem(
                                     icon: Icons.help_outline,
@@ -188,9 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (c) =>
-                                              const StaticContentScreen(
-                                                title: "Help & Support",
-                                              ),
+                                              const HelpSupportScreen(),
                                         ),
                                       );
                                     },
@@ -215,6 +201,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 32),
                           const LogoutButton(),
+                          const SizedBox(height: 16),
+                          const DeleteAccountButton(),
                           const SizedBox(height: 100),
                         ],
                       ),

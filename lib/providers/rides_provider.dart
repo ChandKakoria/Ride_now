@@ -65,4 +65,16 @@ class RidesProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> cancelRide(String rideId) async {
+    _error = null;
+    final response = await _rideActionService.cancelRide(rideId);
+    if (response.status == Status.COMPLETED) {
+      fetchMyRides();
+      return true;
+    } else {
+      _error = response.message;
+      return false;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 class AppStrings {
   // App Title
-  static const String appName = 'SakhiYatra';
+  static const String appName = 'Sakhi Yatra';
 
   // API Message Constants
   static const String errorAuth = 'User not authenticated';
@@ -77,4 +77,9 @@ class AppStrings {
       'Please enter pickup and dropoff locations';
   static const String noRidesFound = 'No rides found';
   static const String tryDifferentSearch = 'Try different locations or dates';
+
+  // Gender Policy
+  static const String femaleOnlyPolicy = "Women's Safety Policy";
+  static const String femaleOnlyMessage =
+      "This platform is designed for women's safety. This feature is only available for women riders.";
 }

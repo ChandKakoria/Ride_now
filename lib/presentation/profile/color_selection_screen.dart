@@ -87,11 +87,13 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
                     ),
                     secondary: CircleAvatar(
                       radius: 12,
+                      backgroundColor: _getColorFromName(colorName),
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: Colors.grey.withOpacity(0.3),
+                            width: 0.5,
                           ),
                         ),
                       ),
@@ -166,6 +168,8 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
     if (n.contains('brown')) return Colors.brown;
     if (n.contains('orange')) return Colors.orange;
     if (n.contains('purple')) return Colors.purple;
+    if (n.contains('yellow')) return Colors.yellow;
+    if (n.contains('green')) return Colors.green;
     return Colors.blueGrey;
   }
 }

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sakhi_yatra/providers/rides_provider.dart';
 
 class CancelRideExplanationSheet extends StatefulWidget {
   final String reason;
-  const CancelRideExplanationSheet({super.key, required this.reason});
+  final String rideId;
+  const CancelRideExplanationSheet({
+    super.key,
+    required this.reason,
+    required this.rideId,
+  });
   @override
   State<CancelRideExplanationSheet> createState() =>
       _CancelRideExplanationSheetState();
@@ -11,6 +18,7 @@ class CancelRideExplanationSheet extends StatefulWidget {
 class _CancelRideExplanationSheetState
     extends State<CancelRideExplanationSheet> {
   final _controller = TextEditingController();
+  bool _isCancelling = false;
   @override
   void dispose() {
     _controller.dispose();
@@ -92,21 +100,37 @@ class _CancelRideExplanationSheetState
     width: double.infinity,
     height: 56,
     child: ElevatedButton(
-      onPressed: () {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text("Ride cancelled successfully"),
-            ),
-        );
+      onPressed: _isCancelling ? null : () async {
+        setState(() => _isCancelling = true);
+        final provider = context.read<RidesProvider>();
+        final success = await provider.cancelRide(widget.rideId);
+        if (mounted) {
+          setState(() => _isCancelling = false);
+          if (success) {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Ride cancelled successfully")),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(provider.error ?? "Failed to cancel ride")),
+            );
+          }
+        }
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
-      child: const Text(
-        "Confirm Cancellation",
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
+      child: _isCancelling
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Text(
+              "Confirm Cancellation",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
     ),
   );
 }

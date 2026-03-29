@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sakhi_yatra/core/api_response.dart';
 import 'package:sakhi_yatra/core/api_constants.dart';
@@ -12,34 +13,11 @@ class RideService {
     required String dropoff,
     String? date,
   }) async {
-    print("RideService: searchRides($pickup, $dropoff, $date) triggered");
+    if (kDebugMode) print("RideService: searchRides($pickup, $dropoff, $date) triggered");
     final String url = ApiConstants.searchRides(pickup, dropoff, date);
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-      );
-
-      return ApiUtils.handleResponse<List<RideModel>>(response, (data) {
-        final List list = data['rides'] ?? [];
-        return list.map((e) {
-          final rideJson = e['ride_details'] ?? e;
-          return RideModel.fromJson(rideJson);
-        }).toList();
-      });
-    } catch (e) {
-      return ApiResponse.error(e.toString());
-    }
-  }
-
-  Future<ApiResponse<List<RideModel>>> getMyRides() async {
-    print("RideService: getMyRides() triggered");
-    final String url = ApiConstants.myRides;
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      print("RideService: Auth token missing for getMyRides");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -60,17 +38,48 @@ class RideService {
         }).toList();
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
+    }
+  }
+
+  Future<ApiResponse<List<RideModel>>> getMyRides() async {
+    if (kDebugMode) print("RideService: getMyRides() triggered");
+    final String url = ApiConstants.myRides;
+    final String? token = LocalStorageService.getToken();
+
+    if (token == null) {
+      if (kDebugMode) print("RideService: Auth token missing for getMyRides");
+      return ApiResponse.error(AppStrings.errorAuth);
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      return ApiUtils.handleResponse<List<RideModel>>(response, (data) {
+        final List list = data['rides'] ?? [];
+        return list.map((e) {
+          final rideJson = e['ride_details'] ?? e;
+          return RideModel.fromJson(rideJson);
+        }).toList();
+      });
+    } catch (e) {
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
   Future<ApiResponse<List<RideModel>>> getMyBookedRides() async {
-    print("RideService: getMyBookedRides() triggered");
+    if (kDebugMode) print("RideService: getMyBookedRides() triggered");
     final String url = ApiConstants.bookedRides;
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      print("RideService: Auth token missing for getMyBookedRides");
+      if (kDebugMode) print("RideService: Auth token missing for getMyBookedRides");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -91,17 +100,17 @@ class RideService {
         }).toList();
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
   Future<ApiResponse<RideModel>> getRideDetails(String id) async {
-    print("RideService: getRideDetails($id) triggered");
+    if (kDebugMode) print("RideService: getRideDetails($id) triggered");
     final String url = ApiConstants.rideDetails(id);
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      print("RideService: Auth token missing for getRideDetails");
+      if (kDebugMode) print("RideService: Auth token missing for getRideDetails");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -119,7 +128,7 @@ class RideService {
         (data) => RideModel.fromJson(data['ride']),
       );
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 }

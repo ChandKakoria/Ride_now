@@ -15,6 +15,8 @@ import 'package:sakhi_yatra/providers/theme_provider.dart';
 import 'package:sakhi_yatra/presentation/login/login_screen.dart';
 import 'package:sakhi_yatra/presentation/root_screen.dart';
 import 'package:sakhi_yatra/presentation/main_screen.dart';
+import 'package:sakhi_yatra/presentation/search/ride_details_screen.dart';
+import 'package:sakhi_yatra/services/push_notification_service.dart';
 
 import 'dart:io';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
@@ -27,7 +29,9 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+
+  await PushNotificationService.init();
+
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -63,7 +67,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
           return MaterialApp(
-            title: 'SakhiYatra',
+            title: 'Sakhi Yatra',
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
             theme: AppTheme.lightTheme,
@@ -109,6 +113,7 @@ class MyApp extends StatelessWidget {
               '/': (context) => const RootScreen(),
               '/login': (context) => const LoginScreen(),
               '/main': (context) => const MainScreen(),
+              '/rideDetails': (context) => const RideDetailsScreen(),
             },
           );
         },

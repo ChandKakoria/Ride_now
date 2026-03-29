@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sakhi_yatra/core/api_response.dart';
 import 'package:sakhi_yatra/services/local_storage_service.dart';
@@ -10,18 +12,20 @@ class ApiUtils {
     http.Response response,
     FutureOr<T> Function(dynamic data) mapper,
   ) async {
-    print("--- API REQUEST ---");
-    print("URL: ${response.request?.url}");
-    print("Method: ${response.request?.method}");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
-    print("------------------");
+    if (kDebugMode) {
+      print("--- API REQUEST ---");
+      print("URL: ${response.request?.url}");
+      print("Method: ${response.request?.method}");
+      print("Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+      print("------------------");
+    }
 
     final body = jsonDecode(response.body);
 
     // Check for token expiration
     if (body is Map && body['msg'] == "Token has expired") {
-      print("Token expired! Logging out...");
+      if (kDebugMode) print("Token expired! Logging out...");
       await LocalStorageService.clearAll();
       navigatorKey.currentState?.pushNamedAndRemoveUntil(
         '/login',
@@ -34,12 +38,24 @@ class ApiUtils {
       try {
         return ApiResponse.completed(await mapper(body));
       } catch (e) {
-        return ApiResponse.error("Data mapping error: $e");
+        return ApiResponse.error("Something went wrong. Please try again.");
       }
     } else {
       return ApiResponse.error(
         body['message'] ?? body['msg'] ?? "Error ${response.statusCode}",
       );
     }
+  }
+
+  static String handleError(dynamic e) {
+    if (kDebugMode) print("API Error: $e");
+    
+    if (e is SocketException || e.toString().contains("SocketException")) {
+      return "No internet connection. Please check your network.";
+    } else if (e is TimeoutException || e.toString().contains("TimeoutException")) {
+      return "Connection timed out. Please try again.";
+    }
+    
+    return "An unexpected error occurred. Please try again later.";
   }
 }

@@ -90,7 +90,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   Text(
                     AppStrings.createAccount,
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(height: 32),
                   _buildFields(),
@@ -183,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       const SizedBox(height: 16),
-      _buildFemaleGenderCard(),
+      _buildGenderSelection(),
       const SizedBox(height: 16),
       GlassTextField(
         controller: _pass,
@@ -196,25 +200,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ],
   );
 
-  Widget _buildFemaleGenderCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
-        ),
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Icon(Icons.female, size: 24),
+  Widget _buildGenderSelection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          child: Text(
+            "Select Gender",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
-          Text("Gender: Female", style: TextStyle(fontSize: 16)),
-        ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _genderCard("male", Icons.male, "Male"),
+            _genderCard("female", Icons.female, "Female"),
+            _genderCard("other", Icons.transgender, "Other"),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _genderCard(String value, IconData icon, String label) {
+    bool isSelected = _selectedGender == value;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedGender = value),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isSelected ? Colors.white : Colors.white.withOpacity(0.2),
+              width: 1.5,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.white.withOpacity(0.7),
+                size: 24,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected
+                      ? Theme.of(context).primaryColor
+                      : Colors.white.withOpacity(0.9),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

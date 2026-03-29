@@ -16,13 +16,14 @@ import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart
 import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 import 'package:sakhi_yatra/presentation/rides/driver_details_screen.dart';
 import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:sakhi_yatra/core/utils/gender_validator.dart';
 
 class RideDetailsScreen extends StatefulWidget {
-  final RideModel ride;
+  final RideModel? ride;
   final bool isMyRide;
   const RideDetailsScreen({
     super.key,
-    required this.ride,
+    this.ride,
     this.isMyRide = false,
   });
   @override
@@ -30,15 +31,22 @@ class RideDetailsScreen extends StatefulWidget {
 }
 
 class _RideDetailsScreenState extends State<RideDetailsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<RidesProvider>().fetchRideDetails(widget.ride.id),
-    );
-  }
-
+  String? _rideId;
   bool _isBooking = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_rideId == null) {
+      final rideIdFromRoute = ModalRoute.of(context)?.settings.arguments as String?;
+      _rideId = widget.ride?.id ?? rideIdFromRoute;
+      if (_rideId != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) context.read<RidesProvider>().fetchRideDetails(_rideId!);
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +57,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
           builder: (context, provider, _) {
             final res = provider.rideDetailsResponse;
             final ride = res.data ?? widget.ride;
-            if (res.status == Status.LOADING && res.data == null) {
+            if (ride == null || (res.status == Status.LOADING && res.data == null)) {
               return Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor,
@@ -165,6 +173,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   );
 
   Future<void> _handleBook(String id) async {
+    if (!GenderValidator.checkGender(context)) return;
     if (!Provider.of<ConnectivityProvider>(
       context,
       listen: false,
@@ -200,7 +209,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
           ),
         ),
       );
-      if (ok) p.fetchRideDetails(widget.ride.id);
+      if (ok && _rideId != null) p.fetchRideDetails(_rideId!);
     }
   }
 

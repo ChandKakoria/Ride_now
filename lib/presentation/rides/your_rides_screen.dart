@@ -15,13 +15,17 @@ class YourRidesScreen extends StatefulWidget {
 class _YourRidesScreenState extends State<YourRidesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  int _lastIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this)
       ..addListener(() {
-        if (!_tabController.indexIsChanging) _fetchData();
+        if (_tabController.index != _lastIndex) {
+          _lastIndex = _tabController.index;
+          _fetchData();
+        }
       });
     WidgetsBinding.instance.addPostFrameCallback((_) => _fetchData());
   }

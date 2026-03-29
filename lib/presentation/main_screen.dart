@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:sakhi_yatra/presentation/search/ride_search_screen.dart';
 import 'package:sakhi_yatra/presentation/publish/publish_screen.dart';
 import 'package:sakhi_yatra/presentation/rides/your_rides_screen.dart';
@@ -31,9 +32,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      body: SharedGradientBackground(
+    return UpgradeAlert(
+      child: Scaffold(
+        extendBody: true,
+        body: SharedGradientBackground(
         child: IndexedStack(index: _currentIndex, children: _screens),
       ),
       bottomNavigationBar: Container(
@@ -80,6 +82,6 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

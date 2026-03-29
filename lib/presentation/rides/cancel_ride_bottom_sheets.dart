@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sakhi_yatra/presentation/rides/widgets/cancel_ride_explanation_sheet.dart';
 
 class CancelRideReasonBottomSheet extends StatelessWidget {
-  const CancelRideReasonBottomSheet({super.key});
+  final String rideId;
+  const CancelRideReasonBottomSheet({super.key, required this.rideId});
 
   final List<String> reasons = const [
     "The car owner changed the date/schedule",
@@ -63,7 +64,7 @@ class CancelRideReasonBottomSheet extends StatelessWidget {
                       ),
                     ),
                     builder: (c) =>
-                        CancelRideExplanationSheet(reason: reasons[i]),
+                        CancelRideExplanationSheet(reason: reasons[i], rideId: rideId),
                   );
                 },
               ),

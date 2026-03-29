@@ -31,7 +31,7 @@ class VehicleService {
         return list.map((item) => VehicleModel.fromJson(item)).toList();
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
@@ -55,7 +55,7 @@ class VehicleService {
 
       return ApiUtils.handleResponse<dynamic>(response, (data) => data);
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
@@ -78,24 +78,32 @@ class VehicleService {
 
       return ApiUtils.handleResponse<dynamic>(response, (data) => data);
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
   Future<ApiResponse<VehicleSelectionData>> getAvailableVehicles() async {
-    const String url =
-        "https://python-beckend-chandkakorias-projects.vercel.app/api/vehicles";
+    final String url = ApiConstants.vehicles;
+    final String? token = LocalStorageService.getToken();
+
+    if (token == null) {
+      return ApiResponse.error(AppStrings.errorAuth);
+    }
+
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
       );
 
       return ApiUtils.handleResponse<VehicleSelectionData>(response, (data) {
         return VehicleSelectionData.fromJson(data);
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sakhi_yatra/core/api_response.dart';
 import 'package:sakhi_yatra/core/api_constants.dart';
 import 'package:sakhi_yatra/core/api_utils.dart';
@@ -14,10 +16,21 @@ class AuthService {
   ) async {
     final String url = ApiConstants.login;
     try {
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        if (kDebugMode) print("Error getting FCM token: $e");
+      }
+
       final response = await http.post(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "password": password}),
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+          if (fcmToken != null) "fcm_token": fcmToken,
+        }),
       );
       return ApiUtils.handleResponse<Map<String, dynamic>>(response, (
         data,
@@ -32,7 +45,7 @@ class AuthService {
         return res;
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
@@ -43,8 +56,19 @@ class AuthService {
     final String url = ApiConstants.signUp;
     final Map<String, dynamic> userData = user.toJson();
     userData['password'] = password;
-    print("Signup Payload: ${jsonEncode(userData)}");
+    
     try {
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        if (kDebugMode) print("Error getting FCM token: $e");
+      }
+      if (fcmToken != null) {
+        userData['fcm_token'] = fcmToken;
+      }
+
+      if (kDebugMode) print("Signup Payload: ${jsonEncode(userData)}");
       final response = await http.post(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
@@ -63,7 +87,7 @@ class AuthService {
         return res;
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 
@@ -81,7 +105,7 @@ class AuthService {
         return data as Map<String, dynamic>;
       });
     } catch (e) {
-      return ApiResponse.error(e.toString());
+      return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
 

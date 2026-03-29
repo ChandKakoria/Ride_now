@@ -9,6 +9,7 @@ class UserModel {
   final String? dob;
   final String? gender;
   final VehicleModel? vehicle;
+  final String? fcmToken;
 
   UserModel({
     required this.id,
@@ -19,6 +20,7 @@ class UserModel {
     this.dob,
     this.gender,
     this.vehicle,
+    this.fcmToken,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class UserModel {
       phoneNumber: json['phone_number'] ?? json['phone'],
       dob: json['dob'],
       gender: json['gender'],
+      fcmToken: json['fcm_token'],
       vehicle: json['vehicle'] != null
           ? VehicleModel.fromJson(json['vehicle'])
           : null,
@@ -49,6 +52,7 @@ class UserModel {
       'phone_number': phoneNumber,
       'dob': dob,
       'gender': gender,
+      if (fcmToken != null) 'fcm_token': fcmToken,
     };
   }
 

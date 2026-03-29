@@ -106,18 +106,22 @@ class PlaceService {
         body: body,
       );
 
-      debugPrint('Routes API URL: $url');
-      debugPrint('Routes API Status: ${response.statusCode}');
-      debugPrint('Routes API Body: ${response.body}');
+      if (kDebugMode) {
+        debugPrint('Routes API URL: $url');
+        debugPrint('Routes API Status: ${response.statusCode}');
+        debugPrint('Routes API Body: ${response.body}');
+      }
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        final data = json.decode(response.body);
-        debugPrint('Routes API Error: ${data}');
+        if (kDebugMode) {
+          final data = json.decode(response.body);
+          debugPrint('Routes API Error: ${data}');
+        }
       }
     } catch (e) {
-      debugPrint('Error fetching routes: $e');
+      if (kDebugMode) debugPrint('Error fetching routes: $e');
     }
     return null;
   }

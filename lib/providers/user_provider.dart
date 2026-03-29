@@ -6,12 +6,8 @@ import 'package:sakhi_yatra/services/user_service.dart';
 class UserProvider extends ChangeNotifier {
   final UserService _userService = UserService();
   ApiResponse<UserModel> _profile = ApiResponse.loading();
-  ApiResponse<String> _privacy = ApiResponse.loading();
-  ApiResponse<String> _terms = ApiResponse.loading();
 
   ApiResponse<UserModel> get profile => _profile;
-  ApiResponse<String> get privacy => _privacy;
-  ApiResponse<String> get terms => _terms;
 
   Future<void> fetchProfile() async {
     print("UserProvider: fetchProfile() triggered");
@@ -21,19 +17,6 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchPrivacy() async {
-    _privacy = ApiResponse.loading();
-    notifyListeners();
-    _privacy = await _userService.getPrivacy();
-    notifyListeners();
-  }
-
-  Future<void> fetchTerms() async {
-    _terms = ApiResponse.loading();
-    notifyListeners();
-    _terms = await _userService.getTerms();
-    notifyListeners();
-  }
 
   Future<ApiResponse<dynamic>> updateProfile({
     required String firstName,
@@ -77,5 +60,9 @@ class UserProvider extends ChangeNotifier {
   void clearProfile() {
     _profile = ApiResponse.loading();
     notifyListeners();
+  }
+
+  Future<ApiResponse<dynamic>> deleteAccount() async {
+    return await _userService.deleteAccount();
   }
 }
