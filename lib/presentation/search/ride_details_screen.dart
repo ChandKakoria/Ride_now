@@ -15,6 +15,7 @@ import 'package:sakhi_yatra/core/app_strings.dart';
 import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
 import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
 import 'package:sakhi_yatra/presentation/rides/driver_details_screen.dart';
+import 'package:sakhi_yatra/presentation/rides/cancel_ride_bottom_sheets.dart';
 import 'package:sakhi_yatra/providers/connectivity_provider.dart';
 import 'package:sakhi_yatra/core/utils/gender_validator.dart';
 
@@ -150,11 +151,13 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    child: RideBottomAction(
-                      status: ride.status ?? "open",
-                      isLoading: _isBooking,
-                      onBook: () => _handleBook(ride.id),
-                    ),
+                    child: (ride.status?.toLowerCase() == 'booked')
+                        ? _buildCancelAction(context, ride.id)
+                        : RideBottomAction(
+                            status: ride.status ?? "open",
+                            isLoading: _isBooking,
+                            onBook: () => _handleBook(ride.id),
+                          ),
                   ),
               ],
             );
@@ -212,6 +215,47 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
       if (ok && _rideId != null) p.fetchRideDetails(_rideId!);
     }
   }
+
+  Widget _buildCancelAction(BuildContext context, String rideId) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).shadowColor.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (c) => CancelRideReasonBottomSheet(rideId: rideId),
+            );
+          },
+          icon: const Icon(Icons.cancel, color: Colors.white),
+          label: const Text(
+            "Cancel Ride",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28),
+            ),
+            elevation: 0,
+          ),
+        ),
+      );
 
   Widget _buildVehicleInfo(VehicleModel vehicle) {
     return Padding(

@@ -5,7 +5,7 @@ class AppStrings {
   // API Message Constants
   static const String errorAuth = 'User not authenticated';
   static const String errorGeneric = 'Something went wrong. Please try again.';
-  static const String successRideBooked = 'Ride booked successfully!';
+  static const String successRideBooked = 'Ride Requested successfully!';
   static const String successRequestAccepted = 'Request accepted!';
   static const String errorBookingFailed = 'Failed to book ride';
   static const String errorAcceptFailed = 'Failed to accept request';
