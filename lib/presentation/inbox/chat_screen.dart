@@ -235,7 +235,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: const EdgeInsets.all(12),
                 decoration: const BoxDecoration(
                   color: Color(0xFF762B20),
-                  shape: BoxCircle.circle,
+                  shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.send, color: Colors.white, size: 24),
               ),

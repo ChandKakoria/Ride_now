@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sakhi_yatra/core/api_constants.dart';
-import 'package:sakhi_yatra/core/api_utils.dart';
 import 'package:sakhi_yatra/core/models/chat_model.dart';
 import 'package:sakhi_yatra/services/local_storage_service.dart';
 
@@ -59,7 +58,7 @@ class ChatService {
       status: MessageStatus.sent,
     );
 
-    final docRef = await _firestore
+    await _firestore
         .collection('chats')
         .doc(chatDocId)
         .collection('messages')
