@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sakhi_yatra/core/models/chat_model.dart';
@@ -92,6 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<List<ChatMessage>>(
               stream: _chatService.getMessages(_chatDocId),
               builder: (context, snapshot) {
+                if (kDebugMode) print("ChatScreen: Snapshot state: \${snapshot.connectionState}, hasData: \${snapshot.hasData}");
                 if (snapshot.hasError) {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 }

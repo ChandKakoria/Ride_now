@@ -117,4 +117,27 @@ class UserService {
       return ApiResponse.error(ApiUtils.handleError(e));
     }
   }
+
+  Future<ApiResponse<dynamic>> updateFcmToken(String token) async {
+    if (kDebugMode) print("UserService: updateFcmToken() triggered");
+    final String url = ApiConstants.updateFcmToken;
+    final String? authToken = LocalStorageService.getToken();
+
+    if (authToken == null) return ApiResponse.error(AppStrings.errorAuth);
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $authToken",
+        },
+        body: json.encode({"fcm_token": token}),
+      );
+
+      return ApiUtils.handleResponse<dynamic>(response, (data) => data);
+    } catch (e) {
+      return ApiResponse.error(ApiUtils.handleError(e));
+    }
+  }
 }

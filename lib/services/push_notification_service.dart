@@ -82,9 +82,13 @@ class PushNotificationService {
     if (message.data['type'] == 'ride') {
       String? rideId = message.data['rideId'];
       if (rideId != null && navigatorKey.currentState != null) {
-        // According to user request:
-        // Navigator.pushNamed(context, "/rideDetails", arguments: rideId);
         navigatorKey.currentState!.pushNamed("/rideDetails", arguments: rideId);
+      }
+    } else if (message.data['type'] == 'chat') {
+      // For chat, we might need more data like ride_id/request_id to navigate to Inbox or Chat
+      // For now, let's just navigate to MainScreen with index 3 (Inbox)
+      if (navigatorKey.currentState != null) {
+        navigatorKey.currentState!.pushNamedAndRemoveUntil('/main', (route) => false);
       }
     }
   }
@@ -94,6 +98,11 @@ class PushNotificationService {
       String? rideId = message.data['rideId'];
       if (rideId != null && navigatorKey.currentState != null) {
         navigatorKey.currentState!.pushNamed("/rideDetails", arguments: rideId);
+      }
+    } else if (message.data['type'] == 'chat') {
+      if (navigatorKey.currentState != null) {
+        // Navigate to Inbox tab
+        navigatorKey.currentState!.pushNamedAndRemoveUntil('/main', (route) => false);
       }
     }
   }

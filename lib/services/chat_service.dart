@@ -49,23 +49,35 @@ class ChatService {
   }
 
   Future<void> sendMessage(String chatDocId, String text, String senderId, String receiverId) async {
-    final message = ChatMessage(
-      id: '',
-      senderId: senderId,
-      receiverId: receiverId,
-      text: text,
-      timestamp: DateTime.now(),
-      status: MessageStatus.sent,
-    );
+    try {
+      final message = ChatMessage(
+        id: '',
+        senderId: senderId,
+        receiverId: receiverId,
+        text: text,
+        timestamp: DateTime.now(),
+        status: MessageStatus.sent,
+      );
 
-    await _firestore
-        .collection('chats')
-        .doc(chatDocId)
-        .collection('messages')
-        .add(message.toFirestore());
+      // Ensure the chat document exists
+      await _firestore.collection('chats').doc(chatDocId).set({
+        'lastMessage': text,
+        'lastMessageTime': FieldValue.serverTimestamp(),
+        'users': [senderId, receiverId],
+      }, SetOptions(merge: true));
 
-    // Send push notification via backend
-    _sendNotification(receiverId, text);
+      await _firestore
+          .collection('chats')
+          .doc(chatDocId)
+          .collection('messages')
+          .add(message.toFirestore());
+
+      // Send push notification via backend
+      _sendNotification(receiverId, text);
+    } catch (e) {
+      if (kDebugMode) print("Error in sendMessage: $e");
+      rethrow;
+    }
   }
 
   Future<void> _sendNotification(String recipientId, String text) async {

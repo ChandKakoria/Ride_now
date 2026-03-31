@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:upgrader/upgrader.dart';
@@ -12,6 +13,9 @@ import 'package:sakhi_yatra/providers/rides_provider.dart';
 import 'package:sakhi_yatra/providers/user_provider.dart';
 import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sakhi_yatra/services/user_service.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -21,6 +25,23 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _syncFcmToken();
+  }
+
+  Future<void> _syncFcmToken() async {
+    try {
+      String? token = await FirebaseMessaging.instance.getToken();
+      if (token != null) {
+        await UserService().updateFcmToken(token);
+      }
+    } catch (e) {
+      if (kDebugMode) print("Error syncing FCM token: $e");
+    }
+  }
 
   final List<Widget> _screens = const [
     RideSearchScreen(),

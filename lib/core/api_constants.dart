@@ -25,6 +25,7 @@ class ApiConstants {
   static String get terms => "https://python-beckend-chandkakorias-projects.vercel.app/api/terms-page";
   static String get chatList => "$baseUrl/chat-list";
   static String get sendChatNotification => "$baseUrl/send-chat-notification";
+  static String get updateFcmToken => "$baseUrl/update-fcm-token";
   static String rideDetails(String id) => "$baseUrl/rides/$id";
   static String searchRides(String pickup, String dropoff, String? date) =>
       "$baseUrl/rides/search?pickup_location=$pickup&dropoff_location=$dropoff${date != null ? '&date=$date' : ''}";
