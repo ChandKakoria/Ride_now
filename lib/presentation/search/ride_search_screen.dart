@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/providers/ride_search_provider.dart';
-import 'package:sakhi_yatra/presentation/search/all_rides_screen.dart';
-import 'package:sakhi_yatra/presentation/search/widgets/search_header.dart';
-import 'package:sakhi_yatra/presentation/search/location_selection_screen.dart';
-import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:ride_bridge_car/providers/ride_search_provider.dart';
+import 'package:ride_bridge_car/presentation/search/all_rides_screen.dart';
+import 'package:ride_bridge_car/presentation/search/widgets/search_header.dart';
+import 'package:ride_bridge_car/presentation/search/location_selection_screen.dart';
+import 'package:ride_bridge_car/providers/connectivity_provider.dart';
 
 class RideSearchScreen extends StatefulWidget {
   const RideSearchScreen({super.key});

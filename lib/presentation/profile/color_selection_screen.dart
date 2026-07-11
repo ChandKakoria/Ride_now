@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/models/vehicle_selection_model.dart';
-import 'package:sakhi_yatra/providers/user_provider.dart';
-import 'package:sakhi_yatra/providers/vehicle_provider.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/models/vehicle_selection_model.dart';
+import 'package:ride_bridge_car/providers/user_provider.dart';
+import 'package:ride_bridge_car/providers/vehicle_provider.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class ColorSelectionScreen extends StatefulWidget {
   final String brandName;
@@ -139,8 +139,7 @@ class _ColorSelectionScreenState extends State<ColorSelectionScreen> {
                   elevation: 4,
                 ),
                 child: _isLoading
-                    ? CircularProgressIndicator(
-                        )
+                    ? CircularProgressIndicator()
                     : const Text(
                         "Add this vehicle",
                         style: TextStyle(

@@ -44,7 +44,7 @@ class PriceSelector extends StatelessWidget {
                 onTap: onDecrement,
                 enabled: price > 0,
               ),
-              _buildInputArea(context),
+              Expanded(child: _buildInputArea(context)),
               _buildPriceButton(
                 context: context,
                 icon: Icons.add,
@@ -68,32 +68,36 @@ class PriceSelector extends StatelessWidget {
 
   Widget _buildInputArea(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           "₹",
           style: TextStyle(
-            fontSize: 40,
+            fontSize: 32,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        SizedBox(
-          width: 120,
-          child: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 60,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
+        const SizedBox(width: 4),
+        Flexible(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 120),
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+              onChanged: onChanged,
             ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
-            ),
-            onChanged: onChanged,
           ),
         ),
       ],
@@ -113,14 +117,23 @@ class PriceSelector extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: enabled
-              ? Theme.of(context).primaryColor.withOpacity(0.1)
+              ? Theme.of(context).primaryColor
               : Theme.of(context).disabledColor.withOpacity(0.1),
           shape: BoxShape.circle,
+          boxShadow: enabled
+              ? [
+                  BoxShadow(
+                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Icon(
           icon,
           color: enabled
-              ? Theme.of(context).primaryColor
+              ? Colors.white
               : Theme.of(context).disabledColor,
           size: 32,
         ),

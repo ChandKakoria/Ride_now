@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/providers/vehicle_provider.dart';
-import 'package:sakhi_yatra/presentation/profile/brand_selection_screen.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/providers/vehicle_provider.dart';
+import 'package:ride_bridge_car/presentation/profile/brand_selection_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class VehicleListScreen extends StatefulWidget {
   const VehicleListScreen({super.key});
@@ -104,7 +104,7 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToAdd(context),
-        child: Icon(Icons.add, ),
+        child: Icon(Icons.add),
       ),
     );
   }

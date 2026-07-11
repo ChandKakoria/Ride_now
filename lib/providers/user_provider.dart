@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/models/user_model.dart';
-import 'package:sakhi_yatra/services/user_service.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/models/user_model.dart';
+import 'package:ride_bridge_car/services/user_service.dart';
 
 class UserProvider extends ChangeNotifier {
   final UserService _userService = UserService();
@@ -16,7 +16,6 @@ class UserProvider extends ChangeNotifier {
     _profile = await _userService.getProfile();
     notifyListeners();
   }
-
 
   Future<ApiResponse<dynamic>> updateProfile({
     required String firstName,

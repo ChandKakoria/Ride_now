@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:ride_bridge_car/providers/connectivity_provider.dart';
 
 class NoInternetScreen extends StatelessWidget {
   const NoInternetScreen({super.key});

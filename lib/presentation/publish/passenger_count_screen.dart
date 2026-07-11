@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/providers/create_ride_provider.dart';
-import 'package:sakhi_yatra/presentation/publish/price_per_seat_screen.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/providers/create_ride_provider.dart';
+import 'package:ride_bridge_car/presentation/publish/price_per_seat_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class PassengerCountScreen extends StatefulWidget {
   const PassengerCountScreen({super.key});

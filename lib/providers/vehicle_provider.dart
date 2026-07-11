@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/models/vehicle_model.dart';
-import 'package:sakhi_yatra/core/models/vehicle_selection_model.dart';
-import 'package:sakhi_yatra/services/vehicle_service.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/models/vehicle_model.dart';
+import 'package:ride_bridge_car/core/models/vehicle_selection_model.dart';
+import 'package:ride_bridge_car/services/vehicle_service.dart';
 
 class VehicleProvider with ChangeNotifier {
   final VehicleService _vehicleService = VehicleService();

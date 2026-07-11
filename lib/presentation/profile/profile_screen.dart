@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/providers/user_provider.dart';
-import 'package:sakhi_yatra/providers/theme_provider.dart';
-import 'package:sakhi_yatra/providers/vehicle_provider.dart';
-import 'package:sakhi_yatra/presentation/profile/widgets/profile_header.dart';
-import 'package:sakhi_yatra/presentation/profile/widgets/profile_actions.dart';
-import 'package:sakhi_yatra/presentation/profile/change_password_screen.dart';
-import 'package:sakhi_yatra/presentation/profile/edit_profile_screen.dart';
-import 'package:sakhi_yatra/presentation/profile/brand_selection_screen.dart';
-import 'package:sakhi_yatra/presentation/profile/help_support_screen.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
-import 'package:sakhi_yatra/core/api_constants.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/providers/user_provider.dart';
+import 'package:ride_bridge_car/providers/theme_provider.dart';
+import 'package:ride_bridge_car/providers/vehicle_provider.dart';
+import 'package:ride_bridge_car/presentation/profile/widgets/profile_header.dart';
+import 'package:ride_bridge_car/presentation/profile/widgets/profile_actions.dart';
+import 'package:ride_bridge_car/presentation/profile/change_password_screen.dart';
+import 'package:ride_bridge_car/presentation/profile/edit_profile_screen.dart';
+import 'package:ride_bridge_car/presentation/profile/brand_selection_screen.dart';
+import 'package:ride_bridge_car/presentation/profile/help_support_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/core/api_constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

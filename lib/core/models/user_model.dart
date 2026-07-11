@@ -1,4 +1,4 @@
-import 'package:sakhi_yatra/core/models/vehicle_model.dart';
+import 'package:ride_bridge_car/core/models/vehicle_model.dart';
 
 class UserModel {
   final String id;

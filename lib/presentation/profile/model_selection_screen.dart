@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/models/vehicle_selection_model.dart';
-import 'package:sakhi_yatra/presentation/profile/color_selection_screen.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/core/models/vehicle_selection_model.dart';
+import 'package:ride_bridge_car/presentation/profile/color_selection_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class ModelSelectionScreen extends StatelessWidget {
   final VehicleBrand brand;

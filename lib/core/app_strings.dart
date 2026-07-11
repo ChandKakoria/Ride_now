@@ -1,6 +1,6 @@
 class AppStrings {
   // App Title
-  static const String appName = 'Sakhi Yatra';
+  static const String appName = 'RideBridgeCar';
 
   // API Message Constants
   static const String errorAuth = 'User not authenticated';
@@ -13,7 +13,7 @@ class AppStrings {
   // Screen Titles
   static const String titleRideDetails = 'Ride details';
   static const String titleMyRides = 'My Rides';
-  static const String titlePublishRide = 'Publish Ride';
+  static const String titlePublishRide = 'Go Live';
   static const String titleProfile = 'Profile';
 
   // Labels

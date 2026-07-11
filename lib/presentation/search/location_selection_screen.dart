@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:sakhi_yatra/services/place_service.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/services/place_service.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
 
 class LocationSelectionScreen extends StatefulWidget {
   final String title;
@@ -101,10 +101,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(widget.title), elevation: 0),
       body: SharedGradientBackground(
         child: Column(
           children: [

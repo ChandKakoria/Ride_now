@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/core/models/chat_model.dart';
-import 'package:sakhi_yatra/core/models/user_model.dart';
-import 'package:sakhi_yatra/presentation/inbox/chat_screen.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
-import 'package:sakhi_yatra/providers/user_provider.dart';
-import 'package:sakhi_yatra/services/chat_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ride_bridge_car/core/models/chat_model.dart';
+import 'package:ride_bridge_car/core/models/user_model.dart';
+import 'package:ride_bridge_car/presentation/inbox/chat_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/providers/user_provider.dart';
+import 'package:ride_bridge_car/services/chat_service.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -32,6 +33,13 @@ class _InboxScreenState extends State<InboxScreen> {
         _chatList = list;
         _isLoading = false;
       });
+
+      // Cleanup Firestore only if we have an active user profile
+      final userProvider = context.read<UserProvider>();
+      final currentUser = userProvider.profile.data;
+      if (currentUser != null) {
+        _chatService.cleanupStaleChats(list, currentUser.id);
+      }
     }
   }
 
@@ -45,19 +53,20 @@ class _InboxScreenState extends State<InboxScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _chatList == null || _chatList!.isEmpty
-              ? _buildEmptyState()
-              : RefreshIndicator(
-                  onRefresh: _loadChatList,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _chatList!.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final chatUser = _chatList![index];
-                      return _buildChatTile(context, chatUser, currentUser);
-                    },
-                  ),
-                ),
+          ? _buildEmptyState()
+          : RefreshIndicator(
+              onRefresh: _loadChatList,
+              child: ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: _chatList!.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final chatUser = _chatList![index];
+                  return _buildChatTile(context, chatUser, currentUser);
+                },
+              ),
+            ),
     );
   }
 
@@ -70,7 +79,11 @@ class _InboxScreenState extends State<InboxScreen> {
           SizedBox(height: 16),
           Text(
             "No messages yet",
-            style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 8),
           Text(
@@ -83,17 +96,19 @@ class _InboxScreenState extends State<InboxScreen> {
     );
   }
 
-  Widget _buildChatTile(BuildContext context, ChatUser chatUser, UserModel? currentUser) {
+  Widget _buildChatTile(
+    BuildContext context,
+    ChatUser chatUser,
+    UserModel? currentUser,
+  ) {
     return InkWell(
       onTap: () {
         if (currentUser != null) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ChatScreen(
-                chatUser: chatUser,
-                currentUserId: currentUser.id,
-              ),
+              builder: (context) =>
+                  ChatScreen(chatUser: chatUser, currentUserId: currentUser.id),
             ),
           );
         }
@@ -136,12 +151,20 @@ class _InboxScreenState extends State<InboxScreen> {
                     children: [
                       Text(
                         chatUser.fullName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(chatUser.rideStatus).withOpacity(0.1),
+                          color: _getStatusColor(
+                            chatUser.rideStatus,
+                          ).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -163,10 +186,51 @@ class _InboxScreenState extends State<InboxScreen> {
                 ],
               ),
             ),
+            _buildUnreadBadge(chatUser, currentUser?.id),
             const Icon(Icons.chevron_right, color: Colors.grey),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildUnreadBadge(ChatUser chatUser, String? currentUserId) {
+    if (currentUserId == null) return const SizedBox.shrink();
+
+    final chatDocId = _chatService.getChatDocId(currentUserId, chatUser.userId);
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatDocId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const SizedBox.shrink();
+        }
+
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final count = data['unreadCount_$currentUserId'] ?? 0;
+
+        if (count == 0) return const SizedBox.shrink();
+
+        return Container(
+          margin: const EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.all(6),
+          decoration: const BoxDecoration(
+            color: Colors.red,
+            shape: BoxShape.circle,
+          ),
+          child: Text(
+            "$count",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      },
     );
   }
 

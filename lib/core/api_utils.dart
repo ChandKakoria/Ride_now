@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
-import 'package:sakhi_yatra/main.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
+import 'package:ride_bridge_car/main.dart';
 
 class ApiUtils {
   static Future<ApiResponse<T>> handleResponse<T>(
@@ -49,13 +49,14 @@ class ApiUtils {
 
   static String handleError(dynamic e) {
     if (kDebugMode) print("API Error: $e");
-    
+
     if (e is SocketException || e.toString().contains("SocketException")) {
       return "No internet connection. Please check your network.";
-    } else if (e is TimeoutException || e.toString().contains("TimeoutException")) {
+    } else if (e is TimeoutException ||
+        e.toString().contains("TimeoutException")) {
       return "Connection timed out. Please try again.";
     }
-    
+
     return "An unexpected error occurred. Please try again later.";
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/presentation/login/login_screen.dart';
-import 'package:sakhi_yatra/presentation/main_screen.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
+import 'package:ride_bridge_car/presentation/login/login_screen.dart';
+import 'package:ride_bridge_car/presentation/main_screen.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
 
 class RootScreen extends StatelessWidget {
   const RootScreen({super.key});

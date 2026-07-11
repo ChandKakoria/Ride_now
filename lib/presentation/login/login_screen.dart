@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:sakhi_yatra/presentation/main_screen.dart';
-import 'package:sakhi_yatra/presentation/login/signup_screen.dart';
-import 'package:sakhi_yatra/presentation/login/forgot_password_screen.dart';
-import 'package:sakhi_yatra/services/auth_service.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/presentation/widgets/glass_text_field.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
-import 'package:sakhi_yatra/presentation/widgets/auth_background.dart';
-import 'package:sakhi_yatra/providers/connectivity_provider.dart';
+import 'package:ride_bridge_car/presentation/main_screen.dart';
+import 'package:ride_bridge_car/presentation/login/signup_screen.dart';
+import 'package:ride_bridge_car/presentation/login/forgot_password_screen.dart';
+import 'package:ride_bridge_car/services/auth_service.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/presentation/widgets/glass_text_field.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
+import 'package:ride_bridge_car/presentation/widgets/auth_background.dart';
+import 'package:ride_bridge_car/providers/connectivity_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {

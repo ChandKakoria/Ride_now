@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/models/ride_model.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/core/models/ride_model.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DriverDetailsScreen extends StatelessWidget {
@@ -88,10 +88,7 @@ class DriverDetailsScreen extends StatelessWidget {
                   icon: const Icon(Icons.call, color: Colors.white),
                   label: Text(
                     "Call Driver",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

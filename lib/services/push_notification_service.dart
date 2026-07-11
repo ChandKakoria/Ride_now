@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/main.dart'; // To access navigatorKey
+import 'package:ride_bridge_car/main.dart'; // To access navigatorKey
+import 'package:ride_bridge_car/presentation/main_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/top_notification_widget.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -10,6 +12,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class PushNotificationService {
+  static String? currentChatDocId;
+
   static Future<void> init() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
@@ -31,26 +35,17 @@ class PushNotificationService {
 
     // A. When App is OPEN (Foreground)
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Foreground notification received: \${message.data}");
-      
-      // Since Android does NOT show banner notifications when the app is in the foreground,
-      // we can show an in-app SnackBar to display the notification title and body.
-      if (message.notification != null && navigatorKey.currentState?.context != null) {
-        final context = navigatorKey.currentState!.context;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "${message.notification?.title ?? ''}\n${message.notification?.body ?? ''}",
-            ),
-            duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'View',
-              onPressed: () {
-                _handleMessage(message);
-              },
-            ),
-          ),
-        );
+      print("Foreground notification received: ${message.data}");
+
+      // Prevent showing notification if the user is already in the same chat screen
+      if (message.data['type'] == 'chat' &&
+          message.data['chatDocId'] == currentChatDocId) {
+        return;
+      }
+
+      if (message.notification != null &&
+          navigatorKey.currentState?.context != null) {
+        _showTopNotification(message);
       } else {
         // If there's no visible notification body, handle the logic silently as requested
         _handleMessage(message);
@@ -59,50 +54,108 @@ class PushNotificationService {
 
     // B. When App is in BACKGROUND and opened by click
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("Background notification opened: \${message.data}");
-      _handleNavigation(message);
+      print("Background notification opened: ${message.data}");
+      _handleNavigationWithRetry(message);
     });
 
     // C. When App is CLOSED (Terminated) and opened by click
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
     if (initialMessage != null) {
-      print("Terminated notification opened: \${initialMessage.data}");
-      // Introduce a slight delay so the navigator is fully ready after startup
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _handleNavigation(initialMessage);
-      });
+      print("Terminated notification opened: ${initialMessage.data}");
+      _handleNavigationWithRetry(initialMessage);
+    }
+  }
+
+  static void _showTopNotification(RemoteMessage message) {
+    if (navigatorKey.currentState != null) {
+      final overlay = Overlay.of(navigatorKey.currentState!.context);
+
+      late OverlayEntry overlayEntry;
+      overlayEntry = OverlayEntry(
+        builder: (context) => TopNotificationWidget(
+          title: message.notification?.title ?? "New Notification",
+          body: message.notification?.body ?? "",
+          onTap: () => _handleNavigationWithRetry(message),
+          onDismiss: () => overlayEntry.remove(),
+        ),
+      );
+
+      overlay.insert(overlayEntry);
     }
   }
 
   static void _handleMessage(RemoteMessage message) {
-    // Optionally show a local notification or snackbar here if desired.
-    // The user instruction mostly cares about navigation on click, which 
-    // for foreground can also trigger if requested, but typically foreground 
-    // deep linking should probably prompt the user or just navigate if that's the desired UX.
-    if (message.data['type'] == 'ride') {
-      String? rideId = message.data['rideId'];
-      if (rideId != null && navigatorKey.currentState != null) {
-        navigatorKey.currentState!.pushNamed("/rideDetails", arguments: rideId);
-      }
-    } else if (message.data['type'] == 'chat') {
-      // For chat, we might need more data like ride_id/request_id to navigate to Inbox or Chat
-      // For now, let's just navigate to MainScreen with index 3 (Inbox)
-      if (navigatorKey.currentState != null) {
-        navigatorKey.currentState!.pushNamedAndRemoveUntil('/main', (route) => false);
-      }
-    }
+    _handleNavigationWithRetry(message);
   }
 
-  static void _handleNavigation(RemoteMessage message) {
-    if (message.data['type'] == 'ride') {
-      String? rideId = message.data['rideId'];
-      if (rideId != null && navigatorKey.currentState != null) {
-        navigatorKey.currentState!.pushNamed("/rideDetails", arguments: rideId);
+  static void _handleNavigationWithRetry(
+    RemoteMessage message, [
+    int retryCount = 0,
+  ]) {
+    if (navigatorKey.currentState == null) {
+      if (retryCount < 10) {
+        print(
+          "Navigator not ready. Retrying navigation... (Attempt ${retryCount + 1})",
+        );
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _handleNavigationWithRetry(message, retryCount + 1);
+        });
+      } else {
+        print("Navigator still not ready after 10 attempts. Giving up.");
       }
-    } else if (message.data['type'] == 'chat') {
-      if (navigatorKey.currentState != null) {
-        // Navigate to Inbox tab
-        navigatorKey.currentState!.pushNamedAndRemoveUntil('/main', (route) => false);
+      return;
+    }
+
+    _executeNavigation(message);
+  }
+
+  static void _executeNavigation(RemoteMessage message) {
+    print("Executing navigation for payload: ${message.data}");
+    final data = message.data;
+    final type = data['type'];
+
+    if (type == 'ride') {
+      final String? rideId = data['ride_id'] ?? data['rideId'];
+      if (rideId != null && navigatorKey.currentState != null) {
+        print("Navigating to My Rides -> Ride Details: $rideId");
+
+        // Go to MainScreen with My Rides tab (index 2)
+        navigatorKey.currentState!.pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(initialIndex: 2),
+          ),
+          (route) => false,
+        );
+
+        // Then push ride details
+        Future.delayed(const Duration(milliseconds: 600), () {
+          navigatorKey.currentState!.pushNamed(
+            "/rideDetails",
+            arguments: rideId,
+          );
+        });
+      }
+    } else if (type == 'chat') {
+      final String? senderId = data['sender_id'] ?? data['senderId'];
+
+      if (senderId != null && navigatorKey.currentState != null) {
+        print("Navigating to Inbox tab for sender: $senderId");
+
+        // Go to MainScreen with Inbox tab (index 3)
+        navigatorKey.currentState!.pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(initialIndex: 3),
+          ),
+          (route) => false,
+        );
+      } else {
+        navigatorKey.currentState?.pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(initialIndex: 0),
+          ),
+          (route) => false,
+        );
       }
     }
   }

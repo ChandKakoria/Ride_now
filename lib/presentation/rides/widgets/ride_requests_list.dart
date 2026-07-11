@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/models/ride_request_model.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
+import 'package:ride_bridge_car/core/models/ride_request_model.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
 
 class RideRequestsList extends StatelessWidget {
   final List<RideRequestModel> requests;

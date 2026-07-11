@@ -55,11 +55,7 @@ class RideListStatusView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: Text(
-                isError ? "Retry" : "Refresh",
-                style: TextStyle(
-                  ),
-              ),
+              child: Text(isError ? "Retry" : "Refresh", style: TextStyle()),
             ),
           ],
         ),

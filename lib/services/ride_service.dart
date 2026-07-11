@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/api_constants.dart';
-import 'package:sakhi_yatra/core/api_utils.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
-import 'package:sakhi_yatra/core/models/ride_model.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/api_constants.dart';
+import 'package:ride_bridge_car/core/api_utils.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
+import 'package:ride_bridge_car/core/models/ride_model.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
 
 class RideService {
   Future<ApiResponse<List<RideModel>>> searchRides({
@@ -13,7 +13,8 @@ class RideService {
     required String dropoff,
     String? date,
   }) async {
-    if (kDebugMode) print("RideService: searchRides($pickup, $dropoff, $date) triggered");
+    if (kDebugMode)
+      print("RideService: searchRides($pickup, $dropoff, $date) triggered");
     final String url = ApiConstants.searchRides(pickup, dropoff, date);
     final String? token = LocalStorageService.getToken();
 
@@ -79,7 +80,8 @@ class RideService {
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      if (kDebugMode) print("RideService: Auth token missing for getMyBookedRides");
+      if (kDebugMode)
+        print("RideService: Auth token missing for getMyBookedRides");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -110,7 +112,8 @@ class RideService {
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      if (kDebugMode) print("RideService: Auth token missing for getRideDetails");
+      if (kDebugMode)
+        print("RideService: Auth token missing for getRideDetails");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 

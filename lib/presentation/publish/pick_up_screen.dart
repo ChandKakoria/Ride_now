@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:sakhi_yatra/providers/create_ride_provider.dart';
-import 'package:sakhi_yatra/services/place_service.dart';
-import 'package:sakhi_yatra/presentation/publish/drop_off_screen.dart';
-import 'package:sakhi_yatra/presentation/publish/widgets/location_search_bar.dart';
-import 'package:sakhi_yatra/presentation/publish/widgets/location_prediction_list.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/providers/create_ride_provider.dart';
+import 'package:ride_bridge_car/services/place_service.dart';
+import 'package:ride_bridge_car/presentation/publish/drop_off_screen.dart';
+import 'package:ride_bridge_car/presentation/publish/widgets/location_search_bar.dart';
+import 'package:ride_bridge_car/presentation/publish/widgets/location_prediction_list.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
 
 class PickUpScreen extends StatefulWidget {
   const PickUpScreen({super.key});
@@ -251,9 +251,7 @@ class _PickUpScreenState extends State<PickUpScreen> {
             : ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Select a pickup location")),
               ),
-        child: Icon(
-          Icons.arrow_forward,
-          ),
+        child: Icon(Icons.arrow_forward),
       ),
     );
   }

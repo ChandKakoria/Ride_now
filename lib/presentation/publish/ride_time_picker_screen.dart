@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/providers/create_ride_provider.dart';
-import 'package:sakhi_yatra/presentation/publish/passenger_count_screen.dart';
-import 'package:sakhi_yatra/presentation/publish/widgets/selection_tile.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/providers/create_ride_provider.dart';
+import 'package:ride_bridge_car/presentation/publish/passenger_count_screen.dart';
+import 'package:ride_bridge_car/presentation/publish/widgets/selection_tile.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class RideTimePickerScreen extends StatefulWidget {
   const RideTimePickerScreen({super.key});
@@ -147,7 +147,7 @@ class _RideTimePickerScreenState extends State<RideTimePickerScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          ),
+                        ),
                       ),
                     ),
                   ),

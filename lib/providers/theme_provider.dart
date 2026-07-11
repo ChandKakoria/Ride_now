@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.dark;
 
   ThemeProvider() {
     _loadThemeMode();

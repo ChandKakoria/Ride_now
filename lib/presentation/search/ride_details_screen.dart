@@ -1,32 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/core/models/ride_model.dart';
-import 'package:sakhi_yatra/core/models/vehicle_model.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/providers/rides_provider.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_header.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_timeline.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_passenger_info.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_driver_info.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/booked_passengers_list.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_requests_list.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_bottom_action.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
-import 'package:sakhi_yatra/presentation/rides/driver_details_screen.dart';
-import 'package:sakhi_yatra/presentation/rides/cancel_ride_bottom_sheets.dart';
-import 'package:sakhi_yatra/providers/connectivity_provider.dart';
-import 'package:sakhi_yatra/core/utils/gender_validator.dart';
+import 'package:ride_bridge_car/core/models/ride_model.dart';
+import 'package:ride_bridge_car/core/models/vehicle_model.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/providers/rides_provider.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_header.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_timeline.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_passenger_info.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_driver_info.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/booked_passengers_list.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_requests_list.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_bottom_action.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/presentation/rides/driver_details_screen.dart';
+import 'package:ride_bridge_car/presentation/rides/cancel_ride_bottom_sheets.dart';
+import 'package:ride_bridge_car/providers/connectivity_provider.dart';
 
 class RideDetailsScreen extends StatefulWidget {
   final RideModel? ride;
   final bool isMyRide;
-  const RideDetailsScreen({
-    super.key,
-    this.ride,
-    this.isMyRide = false,
-  });
+  const RideDetailsScreen({super.key, this.ride, this.isMyRide = false});
   @override
   State<RideDetailsScreen> createState() => _RideDetailsScreenState();
 }
@@ -39,7 +34,8 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_rideId == null) {
-      final rideIdFromRoute = ModalRoute.of(context)?.settings.arguments as String?;
+      final rideIdFromRoute =
+          ModalRoute.of(context)?.settings.arguments as String?;
       _rideId = widget.ride?.id ?? rideIdFromRoute;
       if (_rideId != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -58,7 +54,8 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
           builder: (context, provider, _) {
             final res = provider.rideDetailsResponse;
             final ride = res.data ?? widget.ride;
-            if (ride == null || (res.status == Status.LOADING && res.data == null)) {
+            if (ride == null ||
+                (res.status == Status.LOADING && res.data == null)) {
               return Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor,
@@ -146,19 +143,21 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                     ],
                   ),
                 ),
-                if (!widget.isMyRide)
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: (ride.status?.toLowerCase() == 'booked')
-                        ? _buildCancelAction(context, ride.id)
-                        : RideBottomAction(
-                            status: ride.status ?? "open",
-                            isLoading: _isBooking,
-                            onBook: () => _handleBook(ride.id),
-                          ),
-                  ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: widget.isMyRide
+                      ? _buildCancelAction(context, ride)
+                      : (ride.status?.toLowerCase() == 'booked' ||
+                            ride.status?.toLowerCase() == 'requested')
+                      ? _buildCancelAction(context, ride)
+                      : RideBottomAction(
+                          status: ride.status ?? "open",
+                          isLoading: _isBooking,
+                          onBook: () => _handleBook(ride.id),
+                        ),
+                ),
               ],
             );
           },
@@ -176,7 +175,6 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   );
 
   Future<void> _handleBook(String id) async {
-    if (!GenderValidator.checkGender(context)) return;
     if (!Provider.of<ConnectivityProvider>(
       context,
       listen: false,
@@ -216,46 +214,51 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     }
   }
 
-  Widget _buildCancelAction(BuildContext context, String rideId) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).shadowColor.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: ElevatedButton.icon(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (c) => CancelRideReasonBottomSheet(rideId: rideId),
-            );
-          },
-          icon: const Icon(Icons.cancel, color: Colors.white),
-          label: const Text(
-            "Cancel Ride",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+  Widget _buildCancelAction(BuildContext context, RideModel ride) {
+    final isCancelled = ride.status?.toLowerCase() == 'cancelled';
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
           ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(28),
-            ),
-            elevation: 0,
+        ],
+      ),
+      child: ElevatedButton.icon(
+        onPressed: isCancelled
+            ? null
+            : () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (c) => CancelRideReasonBottomSheet(rideId: ride.id),
+                );
+              },
+        icon: const Icon(Icons.cancel, color: Colors.white),
+        label: Text(
+          isCancelled ? "Cancelled" : "Cancel Ride",
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
-      );
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          disabledBackgroundColor: Colors.grey.shade400,
+          disabledForegroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          elevation: 0,
+        ),
+      ),
+    );
+  }
 
   Widget _buildVehicleInfo(VehicleModel vehicle) {
     return Padding(

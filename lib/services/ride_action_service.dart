@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/api_constants.dart';
-import 'package:sakhi_yatra/core/api_utils.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/api_constants.dart';
+import 'package:ride_bridge_car/core/api_utils.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
 
 class RideActionService {
   Future<ApiResponse<Map<String, dynamic>>> createRide(
@@ -16,7 +16,8 @@ class RideActionService {
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      if (kDebugMode) print("RideActionService: Auth token missing for createRide");
+      if (kDebugMode)
+        print("RideActionService: Auth token missing for createRide");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -45,7 +46,8 @@ class RideActionService {
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      if (kDebugMode) print("RideActionService: Auth token missing for bookRide");
+      if (kDebugMode)
+        print("RideActionService: Auth token missing for bookRide");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -71,12 +73,14 @@ class RideActionService {
   Future<ApiResponse<Map<String, dynamic>>> acceptRideRequest(
     String requestId,
   ) async {
-    if (kDebugMode) print("RideActionService: acceptRideRequest($requestId) triggered");
+    if (kDebugMode)
+      print("RideActionService: acceptRideRequest($requestId) triggered");
     final String url = ApiConstants.acceptRequest;
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      if (kDebugMode) print("RideActionService: Auth token missing for acceptRideRequest");
+      if (kDebugMode)
+        print("RideActionService: Auth token missing for acceptRideRequest");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 
@@ -105,7 +109,8 @@ class RideActionService {
     final String? token = LocalStorageService.getToken();
 
     if (token == null) {
-      if (kDebugMode) print("RideActionService: Auth token missing for cancelRide");
+      if (kDebugMode)
+        print("RideActionService: Auth token missing for cancelRide");
       return ApiResponse.error(AppStrings.errorAuth);
     }
 

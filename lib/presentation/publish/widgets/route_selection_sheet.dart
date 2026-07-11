@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/utils/map_utils.dart';
-import 'package:sakhi_yatra/presentation/publish/widgets/route_option_tile.dart';
-import 'package:sakhi_yatra/presentation/publish/ride_time_picker_screen.dart';
+import 'package:ride_bridge_car/core/utils/map_utils.dart';
+import 'package:ride_bridge_car/presentation/publish/widgets/route_option_tile.dart';
+import 'package:ride_bridge_car/presentation/publish/ride_time_picker_screen.dart';
 
 class RouteSelectionSheet extends StatelessWidget {
   final ScrollController controller;
@@ -63,9 +63,7 @@ class RouteSelectionSheet extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (c) => const RideTimePickerScreen()),
               ),
-              child: Icon(
-                Icons.arrow_forward,
-                ),
+              child: Icon(Icons.arrow_forward),
             ),
           ),
         ],

@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/api_constants.dart';
-import 'package:sakhi_yatra/core/api_utils.dart';
-import 'package:sakhi_yatra/core/models/user_model.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
-import 'package:sakhi_yatra/main.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/api_constants.dart';
+import 'package:ride_bridge_car/core/api_utils.dart';
+import 'package:ride_bridge_car/core/models/user_model.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
+import 'package:ride_bridge_car/main.dart';
 
 class AuthService {
   Future<ApiResponse<Map<String, dynamic>>> login(
@@ -56,7 +56,7 @@ class AuthService {
     final String url = ApiConstants.signUp;
     final Map<String, dynamic> userData = user.toJson();
     userData['password'] = password;
-    
+
     try {
       String? fcmToken;
       try {

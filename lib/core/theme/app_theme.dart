@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Primary Pink Color
-  static const Color primaryPink = Color(0xFFE91E63);
+  static const Color primaryPink = Color(0xFF9ED3DC);
 
   // Light Theme
   static ThemeData get lightTheme {

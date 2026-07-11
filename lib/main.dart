@@ -4,25 +4,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/providers/ride_search_provider.dart';
-import 'package:sakhi_yatra/providers/create_ride_provider.dart';
-import 'package:sakhi_yatra/providers/rides_provider.dart';
-import 'package:sakhi_yatra/providers/user_provider.dart';
-import 'package:sakhi_yatra/providers/vehicle_provider.dart';
-import 'package:sakhi_yatra/providers/connectivity_provider.dart';
-import 'package:sakhi_yatra/providers/theme_provider.dart';
+import 'package:ride_bridge_car/providers/ride_search_provider.dart';
+import 'package:ride_bridge_car/providers/create_ride_provider.dart';
+import 'package:ride_bridge_car/providers/rides_provider.dart';
+import 'package:ride_bridge_car/providers/user_provider.dart';
+import 'package:ride_bridge_car/providers/vehicle_provider.dart';
+import 'package:ride_bridge_car/providers/connectivity_provider.dart';
+import 'package:ride_bridge_car/providers/theme_provider.dart';
 
-import 'package:sakhi_yatra/presentation/login/login_screen.dart';
-import 'package:sakhi_yatra/presentation/root_screen.dart';
-import 'package:sakhi_yatra/presentation/main_screen.dart';
-import 'package:sakhi_yatra/presentation/search/ride_details_screen.dart';
-import 'package:sakhi_yatra/services/push_notification_service.dart';
+import 'package:ride_bridge_car/presentation/login/login_screen.dart';
+import 'package:ride_bridge_car/presentation/root_screen.dart';
+import 'package:ride_bridge_car/presentation/main_screen.dart';
+import 'package:ride_bridge_car/presentation/search/ride_details_screen.dart';
+import 'package:ride_bridge_car/services/push_notification_service.dart';
 
 import 'dart:io';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
-import 'package:sakhi_yatra/core/theme/app_theme.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
+import 'package:ride_bridge_car/core/theme/app_theme.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

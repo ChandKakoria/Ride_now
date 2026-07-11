@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
 
 class RideBottomAction extends StatelessWidget {
   final String status;
@@ -42,9 +42,7 @@ class RideBottomAction extends StatelessWidget {
             ? SizedBox(
                 height: 20,
                 width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,

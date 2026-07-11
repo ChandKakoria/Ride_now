@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/cancel_ride_explanation_sheet.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/cancel_ride_explanation_sheet.dart';
 
 class CancelRideReasonBottomSheet extends StatelessWidget {
   final String rideId;
@@ -63,8 +63,10 @@ class CancelRideReasonBottomSheet extends StatelessWidget {
                         top: Radius.circular(20),
                       ),
                     ),
-                    builder: (c) =>
-                        CancelRideExplanationSheet(reason: reasons[i], rideId: rideId),
+                    builder: (c) => CancelRideExplanationSheet(
+                      reason: reasons[i],
+                      rideId: rideId,
+                    ),
                   );
                 },
               ),

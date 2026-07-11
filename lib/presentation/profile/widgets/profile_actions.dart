@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/core/api_response.dart';
-import 'package:sakhi_yatra/core/models/user_model.dart';
-import 'package:sakhi_yatra/services/local_storage_service.dart';
-import 'package:sakhi_yatra/providers/user_provider.dart';
+import 'package:ride_bridge_car/core/api_response.dart';
+import 'package:ride_bridge_car/core/models/user_model.dart';
+import 'package:ride_bridge_car/services/local_storage_service.dart';
+import 'package:ride_bridge_car/providers/user_provider.dart';
 
 class ProfileVerifySection extends StatelessWidget {
   final UserModel? user;
@@ -153,7 +153,14 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
       child: ElevatedButton.icon(
         onPressed: _isLoading ? null : () => _showDeleteDialog(context),
         icon: _isLoading
-            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
             : const Icon(Icons.delete_forever, color: Colors.white),
         label: Text(
           _isLoading ? "Deleting..." : "Delete Account",
@@ -180,7 +187,9 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
       context: context,
       builder: (c) => AlertDialog(
         title: const Text("Delete Account"),
-        content: const Text("Are you sure you want to permanently delete your account? This action cannot be undone."),
+        content: const Text(
+          "Are you sure you want to permanently delete your account? This action cannot be undone.",
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(c, false),
@@ -205,11 +214,17 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
       if (response.status == Status.COMPLETED) {
         await LocalStorageService.clearAll();
         if (mounted) {
-          Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/login',
+            (route) => false,
+          );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message ?? "Failed to delete account")),
+          SnackBar(
+            content: Text(response.message ?? "Failed to delete account"),
+          ),
         );
       }
     }

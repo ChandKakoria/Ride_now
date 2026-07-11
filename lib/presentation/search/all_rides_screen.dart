@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/providers/ride_search_provider.dart';
+import 'package:ride_bridge_car/providers/ride_search_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sakhi_yatra/presentation/widgets/ride_card.dart';
+import 'package:ride_bridge_car/presentation/widgets/ride_card.dart';
 import 'package:intl/intl.dart';
-import 'package:sakhi_yatra/core/app_strings.dart';
-import 'package:sakhi_yatra/presentation/rides/widgets/ride_list_status_view.dart';
-import 'package:sakhi_yatra/presentation/widgets/shared_gradient_background.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
+import 'package:ride_bridge_car/core/app_strings.dart';
+import 'package:ride_bridge_car/presentation/rides/widgets/ride_list_status_view.dart';
+import 'package:ride_bridge_car/presentation/widgets/shared_gradient_background.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class AllRidesScreen extends StatelessWidget {
   const AllRidesScreen({super.key});

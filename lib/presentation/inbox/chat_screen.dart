@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sakhi_yatra/core/models/chat_model.dart';
-import 'package:sakhi_yatra/services/chat_service.dart';
+import 'package:ride_bridge_car/core/models/chat_model.dart';
+import 'package:ride_bridge_car/services/chat_service.dart';
+import 'package:ride_bridge_car/services/push_notification_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser chatUser;
@@ -27,7 +28,17 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _chatDocId = _chatService.getChatDocId(widget.currentUserId, widget.chatUser.userId);
+    _chatDocId = _chatService.getChatDocId(
+      widget.currentUserId,
+      widget.chatUser.userId,
+    );
+    PushNotificationService.currentChatDocId = _chatDocId;
+  }
+
+  @override
+  void dispose() {
+    PushNotificationService.currentChatDocId = null;
+    super.dispose();
   }
 
   void _sendMessage() {
@@ -93,7 +104,10 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<List<ChatMessage>>(
               stream: _chatService.getMessages(_chatDocId),
               builder: (context, snapshot) {
-                if (kDebugMode) print("ChatScreen: Snapshot state: \${snapshot.connectionState}, hasData: \${snapshot.hasData}");
+                if (kDebugMode)
+                  print(
+                    "ChatScreen: Snapshot state: \${snapshot.connectionState}, hasData: \${snapshot.hasData}",
+                  );
                 if (snapshot.hasError) {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 }
@@ -102,14 +116,17 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
 
                 final messages = snapshot.data!;
-                
+
                 // Logic to update status to 'delivered' and 'seen'
                 _handleMessageStatusUpdates(messages);
 
                 return ListView.builder(
                   controller: _scrollController,
                   reverse: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
@@ -127,14 +144,21 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _handleMessageStatusUpdates(List<ChatMessage> messages) {
+    bool hasUpdates = false;
     for (var message in messages) {
       if (message.receiverId == widget.currentUserId) {
         if (message.status != MessageStatus.seen) {
-          _chatService.updateMessageStatus(_chatDocId, message.id, MessageStatus.seen);
+          _chatService.updateMessageStatus(
+            _chatDocId,
+            message.id,
+            MessageStatus.seen,
+          );
+          hasUpdates = true;
         }
       }
-      // Optional: Add 'delivered' logic if recipient is online but hasn't opened chat
-      // In this simple implementation, opening the chat marks as 'seen'.
+    }
+    if (hasUpdates) {
+      _chatService.resetUnreadCount(_chatDocId, widget.currentUserId);
     }
   }
 
@@ -144,7 +168,9 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
         decoration: BoxDecoration(
           color: isMe ? const Color(0xFF762B20) : Colors.grey.shade200,
           borderRadius: BorderRadius.only(
@@ -219,7 +245,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 controller: _messageController,
                 decoration: InputDecoration(
                   hintText: "Type a message...",
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                     borderSide: BorderSide.none,

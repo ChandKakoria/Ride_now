@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sakhi_yatra/presentation/publish/pick_up_screen.dart';
-import 'package:sakhi_yatra/presentation/widgets/common_app_bar.dart';
-import 'package:sakhi_yatra/core/utils/gender_validator.dart';
+import 'package:ride_bridge_car/presentation/publish/pick_up_screen.dart';
+import 'package:ride_bridge_car/presentation/widgets/common_app_bar.dart';
 
 class PublishScreen extends StatelessWidget {
   const PublishScreen({super.key});
@@ -72,14 +71,12 @@ class PublishScreen extends StatelessWidget {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (GenderValidator.checkGender(context)) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PickUpScreen(),
-                          ),
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PickUpScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -95,7 +92,7 @@ class PublishScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        ),
+                      ),
                     ),
                   ),
                 ),

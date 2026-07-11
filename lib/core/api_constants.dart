@@ -21,8 +21,10 @@ class ApiConstants {
   static String get addVehicle => "$baseUrl/add-vehicle";
   static String get removeVehicle => "$baseUrl/remove-vehicle";
   static String get changePassword => "$baseUrl/change-password";
-  static String get privacy => "https://python-beckend-chandkakorias-projects.vercel.app/api/privacy-page";
-  static String get terms => "https://python-beckend-chandkakorias-projects.vercel.app/api/terms-page";
+  static String get privacy =>
+      "https://python-beckend-chandkakorias-projects.vercel.app/api/privacy-page";
+  static String get terms =>
+      "https://python-beckend-chandkakorias-projects.vercel.app/api/terms-page";
   static String get chatList => "$baseUrl/chat-list";
   static String get sendChatNotification => "$baseUrl/send-chat-notification";
   static String get updateFcmToken => "$baseUrl/update-fcm-token";
