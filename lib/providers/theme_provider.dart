@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ride_bridge_car/services/local_storage_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.dark;
+  ThemeMode _themeMode = ThemeMode.light;
 
   ThemeProvider() {
     _loadThemeMode();
