@@ -12,10 +12,10 @@ class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
 
   @override
-  State<InboxScreen> createState() => _InboxScreenState();
+  State<InboxScreen> createState() => InboxScreenState();
 }
 
-class _InboxScreenState extends State<InboxScreen> {
+class InboxScreenState extends State<InboxScreen> {
   final ChatService _chatService = ChatService();
   List<ChatUser>? _chatList;
   bool _isLoading = true;
@@ -23,10 +23,10 @@ class _InboxScreenState extends State<InboxScreen> {
   @override
   void initState() {
     super.initState();
-    _loadChatList();
+    loadChatList();
   }
 
-  Future<void> _loadChatList() async {
+  Future<void> loadChatList() async {
     final list = await _chatService.getChatList();
     if (mounted) {
       setState(() {
@@ -55,7 +55,7 @@ class _InboxScreenState extends State<InboxScreen> {
           : _chatList == null || _chatList!.isEmpty
           ? _buildEmptyState()
           : RefreshIndicator(
-              onRefresh: _loadChatList,
+              onRefresh: loadChatList,
               child: ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: _chatList!.length,

@@ -25,12 +25,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late int _currentIndex;
+  late int _currentIndex = 0;
+  final GlobalKey<InboxScreenState> _inboxKey = GlobalKey<InboxScreenState>();
+  late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
+    _screens = [
+      const RideSearchScreen(),
+      const YourRidesScreen(),
+      const PublishScreen(),
+      InboxScreen(key: _inboxKey),
+      const ProfileScreen(),
+    ];
     _syncFcmToken();
   }
 
@@ -45,13 +54,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  final List<Widget> _screens = const [
-    RideSearchScreen(),
-    YourRidesScreen(),
-    PublishScreen(),
-    InboxScreen(),
-    ProfileScreen(),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +75,9 @@ class _MainScreenState extends State<MainScreen> {
               if (index == 2) {
                 context.read<RidesProvider>().fetchMyRides();
                 context.read<RidesProvider>().fetchBookedRides();
+              }
+              if (index == 3) {
+                _inboxKey.currentState?.loadChatList();
               }
               if (index == 4) context.read<UserProvider>().fetchProfile();
             },

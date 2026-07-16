@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:ride_bridge_car/main.dart'; // To access navigatorKey
 import 'package:ride_bridge_car/presentation/main_screen.dart';
 import 'package:ride_bridge_car/presentation/widgets/top_notification_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_bridge_car/providers/user_provider.dart';
+import 'package:ride_bridge_car/services/chat_service.dart';
+import 'package:ride_bridge_car/core/models/chat_model.dart';
+import 'package:ride_bridge_car/presentation/inbox/chat_screen.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -120,10 +125,10 @@ class PushNotificationService {
       if (rideId != null && navigatorKey.currentState != null) {
         print("Navigating to My Rides -> Ride Details: $rideId");
 
-        // Go to MainScreen with My Rides tab (index 2)
+        // Go to MainScreen with My Rides tab (index 1)
         navigatorKey.currentState!.pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => const MainScreen(initialIndex: 2),
+            builder: (context) => const MainScreen(initialIndex: 1),
           ),
           (route) => false,
         );
@@ -140,15 +145,47 @@ class PushNotificationService {
       final String? senderId = data['sender_id'] ?? data['senderId'];
 
       if (senderId != null && navigatorKey.currentState != null) {
-        print("Navigating to Inbox tab for sender: $senderId");
+        print("Navigating to ChatScreen for sender: $senderId");
 
-        // Go to MainScreen with Inbox tab (index 3)
+        // Go to MainScreen with Inbox tab (index 3) first as a fallback stack
         navigatorKey.currentState!.pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const MainScreen(initialIndex: 3),
           ),
           (route) => false,
         );
+        
+        Future.delayed(const Duration(milliseconds: 600), () async {
+          final context = navigatorKey.currentState!.context;
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          final currentUserId = userProvider.profile.data?.id;
+
+          if (currentUserId != null) {
+            final chatList = await ChatService().getChatList();
+            final chatUser = chatList.firstWhere(
+              (u) => u.userId == senderId,
+              orElse: () => ChatUser(
+                userId: senderId,
+                firstName: "User",
+                lastName: "",
+                gender: "Unknown",
+                role: "Unknown",
+                rideId: "",
+                requestId: "",
+                rideStatus: "",
+              ),
+            );
+
+            navigatorKey.currentState!.push(
+              MaterialPageRoute(
+                builder: (context) => ChatScreen(
+                  chatUser: chatUser,
+                  currentUserId: currentUserId,
+                ),
+              ),
+            );
+          }
+        });
       } else {
         navigatorKey.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(
