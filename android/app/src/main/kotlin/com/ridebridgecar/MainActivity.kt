@@ -1,4 +1,4 @@
-package com.sakhiyatra
+package com.ridebridgecar
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

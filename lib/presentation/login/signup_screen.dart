@@ -76,10 +76,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             constraints: const BoxConstraints(maxWidth: 500),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
@@ -236,10 +236,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.white.withOpacity(0.1),
+            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? Colors.white : Colors.white.withOpacity(0.2),
+              color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.2),
               width: 1.5,
             ),
           ),
@@ -249,7 +249,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 icon,
                 color: isSelected
                     ? Theme.of(context).primaryColor
-                    : Colors.white.withOpacity(0.7),
+                    : Colors.white.withValues(alpha: 0.7),
                 size: 24,
               ),
               const SizedBox(height: 4),
@@ -260,7 +260,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   color: isSelected
                       ? Theme.of(context).primaryColor
-                      : Colors.white.withOpacity(0.9),
+                      : Colors.white.withValues(alpha: 0.9),
                 ),
               ),
             ],
